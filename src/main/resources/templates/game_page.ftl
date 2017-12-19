@@ -18,7 +18,7 @@
     <div id="playerDiv">
     <#list players as p>
         <div>
-        ${p.playerName} - <#if p.isReady >true<#else >false</#if>
+        ${p.playerName} - <#if p.isReady >已准备<#else >未准备</#if>
         </div>
     </#list>
     </div>
@@ -266,4 +266,6 @@
         }
         window.location.href = '/game/tables';
     }
+
+    $(window).bind('beforeunload',exit);
 </script>
