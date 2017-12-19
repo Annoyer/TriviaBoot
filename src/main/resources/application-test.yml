@@ -1,0 +1,32 @@
+spring:
+  email-enabled: false
+  datasource:
+    test-on-borrow: true
+    validation-query: SELECT 1
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://595203d87cdf5.sh.cdb.myqcloud.com:17828/trivia?useUnicode=true&characterEncoding=UTF8
+    username: root
+    password: chuangxin2016
+    type: com.zaxxer.hikari.HikariDataSource
+    initialize: false
+  devtools:
+    restart:
+      exclude: static/**, templates/**
+debug: true
+
+server:
+  port: 10000
+#  tomcat:
+#    basedir: e://logs
+#    accesslog:
+#      directory: logs
+#      enabled: true
+#      pattern: common
+#
+#chrome:
+#  driver:
+#    location: e://chromedriver
+#    poolSize: 1
+#
+#logging:
+#  file: e://logs//yqbd.log
