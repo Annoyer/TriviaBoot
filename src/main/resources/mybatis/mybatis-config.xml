@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--配置mybatis的一些设置 -->
+    <settings>
+        <!--支持主键自增 -->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!--支持驼峰转换 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 设置列明自定义-->
+        <setting name="useColumnLabel" value="true"/>
+    </settings>
+    <!-- 类型映射-->
+    <!--<typeAliases>
+        <package name="model"/>
+    </typeAliases>-->
+
+</configuration>

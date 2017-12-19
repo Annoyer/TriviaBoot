@@ -1,0 +1,8 @@
+flyway:
+  sql-migration-prefix: V
+  sql-migration-suffix: sql
+
+mybatis:
+  mapperLocations: classpath:mybatis/mapper/*.xml
+  typeAliasesPackage: com.ecnu.trivia.model
+  configLocation: classpath:mybatis/mybatis-config.xml

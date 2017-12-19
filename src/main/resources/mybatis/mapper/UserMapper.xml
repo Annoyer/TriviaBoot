@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecnu.trivia.dao.UserDao">
+    <insert id="addUser" parameterType="com.ecnu.trivia.model.User" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO player(username,password)
+      VALUES (#{username},#{password})
+    </insert>
+    <update id="updateWinCountAndLevel">
+        UPDATE player
+        SET win_count=#{winCount}, level=#{level}
+        WHERE id=#{id}
+    </update>
+    <update id="updateLoseCount">
+        UPDATE player
+        SET lose_count=#{loseCount}
+        WHERE id=#{id}
+    </update>
+    <select id="getUser" parameterType="java.lang.String" resultType="com.ecnu.trivia.model.User">
+        SELECT * FROM player
+        WHERE username=#{username} AND password=#{password}
+    </select>
+    <select id="getUserByNickName" parameterType="java.lang.String" resultType="com.ecnu.trivia.model.User">
+        SELECT * FROM player
+        WHERE username=#{username}
+    </select>
+    <select id="getUserById" parameterType="java.lang.Integer" resultType="com.ecnu.trivia.model.User">
+        SELECT * FROM player
+        WHERE id=#{id}
+    </select>
+
+
+</mapper>
