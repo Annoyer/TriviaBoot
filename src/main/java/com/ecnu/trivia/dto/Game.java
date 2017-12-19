@@ -6,8 +6,8 @@ import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.websocket.WebSocketServer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -25,7 +25,7 @@ public class Game {
 
     private final QuestionMaker questionMaker = new QuestionMaker();
 
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
 
     private int currentPlayer = -1;//当前轮到的player序号
 
@@ -59,7 +59,7 @@ public class Game {
 
     }
 
-    public ArrayList<Player> getPlayers() {
+    public CopyOnWriteArrayList<Player> getPlayers() {
         return players;
     }
 
@@ -71,7 +71,7 @@ public class Game {
         return status;
     }
 
-    public void setPlayers(ArrayList<Player> players) {
+    public void setPlayers(CopyOnWriteArrayList<Player> players) {
         this.players = players;
     }
 
@@ -375,6 +375,7 @@ public class Game {
      * @return 游戏是否成功开始
      */
     public boolean startGame() {
+        logger.info("------------------------游戏开始--------------------------");
         if (boardcast("start") == 0) {
             status = 1;
             currentPlayer = 0;

@@ -5,7 +5,6 @@ import com.ecnu.trivia.dto.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.server.standard.SpringConfigurator;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -84,6 +83,7 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
+        logger.info("socket on close()");
         //移除当前用户终端登录的websocket信息,如果该用户下线了，则删除该用户的记录
         if (userSocket.get(this.userId) != null) {
             userSocket.remove(this.userId);

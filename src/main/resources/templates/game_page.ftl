@@ -260,10 +260,10 @@
     }
 
     function exit() {
-        if (websocket != null) {
-            websocket.close();
-            websocket = null;
-        }
+//        if (websocket != null) {
+//            websocket.close();
+//            websocket = null;
+//        }
         window.location.href = '/game/tables';
     }
 
