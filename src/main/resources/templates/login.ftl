@@ -3,9 +3,6 @@
 <head>
     <title>Title</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.min.js"></script>
 </head>
 <body>
 <div id="myForm">
@@ -19,7 +16,7 @@
     </div>
 </div>
 </body>
-<script>
+<script type="text/javascript">
     function login() {
         var username = $("#username").val();
         var password = $("#password").val();

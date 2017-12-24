@@ -16,11 +16,11 @@
 <div>
     <div>桌上的玩家们：</div>
     <div id="playerDiv">
-    <#list players as p>
-        <div>
-        ${p.playerName} - <#if p.isReady >已准备<#else >未准备</#if>
-        </div>
-    </#list>
+    <#--<#list players as p>-->
+        <#--<div>-->
+        <#--${p.playerName} - <#if p.isReady >已准备<#else >未准备</#if>-->
+        <#--</div>-->
+    <#--</#list>-->
     </div>
 </div>
 <br>
@@ -53,7 +53,10 @@
     $(function () {
         if ('WebSocket' in window) {
             console.log("此浏览器支持websocket");
+            //本地
             websocket = new WebSocket("ws://localhost:8080/websocket/${tableId}/${Session.user.id}");
+            //服务器
+            //websocket = new WebSocket("ws://122.152.197.158:10000/websocket/${tableId}/${Session.user.id}");
         } else if ('MozWebSocket' in window) {
             alert("此浏览器只支持MozWebSocket");
         } else {
@@ -62,6 +65,39 @@
         websocket.onopen = function (evnt) {
             alert("链接服务器成功!");
             $("#btnReady").removeAttr("disabled");
+
+            //新增
+            $.ajax({
+                method: 'POST',
+                url: '/game/loadGameInfo',
+                data: {
+                    tableId: ${tableId}
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success==true){
+                        $("#playerDiv").html("");
+                        var str = "";
+                        var players = data.data;
+                        for (var i=0; i<players.length; i++){
+                            str += "<div>"+players[i].playerName+" - ";
+                            if (players[i].isReady) {
+                                str += "已准备";
+                            } else {
+                                str += "未准备";
+                            }
+                            str += "</div>";
+                        }
+                        $("#playerDiv").html(str);
+                    } else {
+                        alert(data.error);
+                        window.location.href = '/game/tables';
+                    }
+                },
+                error: function () {
+                    alert("请求出错！");
+                }
+            });
         };
         websocket.onmessage = function (evnt) {
             var msg = evnt.data;
@@ -138,7 +174,7 @@
                         rollIfMyTurn();
                     } else if (gameStatus.status == -1) {
                         //重绘一下界面，来更新玩家在地图上的位置…………
-                        if (gameStatus.winner.playerName == null) {
+                        if (gameStatus.winner == null) {
                             $("#statusDiv").html("游戏结束,没有人获胜");
                         } else {
                             $("#statusDiv").html("游戏结束,胜者是：" + gameStatus.winner.playerName);

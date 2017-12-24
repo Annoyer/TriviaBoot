@@ -14,7 +14,7 @@ public interface GameService {
 
     List<Game> getAllTables();
 
-    List<Player> getPlayersByTable(int tableId);
+    List<Player> getPlayersByTable(int tableId, User user);
 
     boolean userChooseTable(int tableId, User user, int initialPlace);
 

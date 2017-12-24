@@ -40,9 +40,27 @@ public class GameServiceImpl implements GameService {
         return games;
     }
 
-    public List<Player> getPlayersByTable(int tableId) {
+    /**修改记录：
+    * 2017.12.24
+    * bug：当gamepage上只有一个用户，而用户此时刷新页面。
+    *      此时table上没有人了，被websocket从列表上移出去，但没有访问choosetable的页面，所以空桌没有被加进来。
+    *      服务器会报500。
+    * 解决：在remove table以后，马上再加一个空桌到列表内。同时，如果直接进入gamePage，但用户其实不在桌上，重定向回选桌页面
+    * */
+    public List<Player> getPlayersByTable(int tableId, User user) {
         List<Player> playerList = new ArrayList<Player>();
-        playerList.addAll(WebSocketServer.getTable(tableId).getPlayers());
+
+        Game game = WebSocketServer.getTable(tableId);
+        List<Player> currentList = game.getPlayers();
+
+        boolean isOnTable = game.hasPlayer(user.getId());
+
+        if (!isOnTable){
+            playerList.add(new Player(null,null,-1));
+        } else {
+            playerList.addAll(currentList);
+        }
+
         return playerList;
     }
 
@@ -57,7 +75,6 @@ public class GameServiceImpl implements GameService {
         //如果是空桌，先把桌子加进map
         if (table == null){
             table = new Game(tableId);
-            WebSocketServer.addTable(table);
         }
 
         //若游戏不在进行中，且未满员，加桌成功

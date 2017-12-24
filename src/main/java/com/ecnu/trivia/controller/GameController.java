@@ -1,10 +1,12 @@
 package com.ecnu.trivia.controller;
 
 
+import com.ecnu.trivia.dto.Player;
 import com.ecnu.trivia.dto.Result;
 import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.GameService;
 import com.ecnu.trivia.service.UserService;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by joy12 on 2017/12/9.
@@ -39,16 +44,62 @@ public class GameController {
         return mv;
     }
 
+//    /**
+//     * @param tableId 桌号
+//     * @return 进入游戏页面
+//     * 修改记录：
+//     * 2017.12.24 by.jcy
+//     *      配合service的逻辑，若当前用户不在桌上（不是通过选桌页面进来的），重定向回选桌页面
+//     */
+//    @RequestMapping(value = "/gamePage")
+//    public ModelAndView toGamePage(@RequestParam("tableId") Integer tableId, HttpSession session) {
+//        ModelAndView mv = new ModelAndView("game_page");
+//        User user = (User) session.getAttribute("user");
+//        List<Player> players = gameService.getPlayersByTable(tableId,user);
+//        if (players.size()==1 && players.get(0).getPlace() == -1){
+//            mv.setViewName("/game/tables");
+//        } else {
+//            mv.addObject("players", players);
+//            mv.addObject("tableId", tableId);
+//        }
+//        return mv;
+//    }
+
     /**
      * @param tableId 桌号
      * @return 进入游戏页面
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     *      配合service的逻辑，若当前用户不在桌上（不是通过选桌页面进来的），重定向回选桌页面
      */
     @RequestMapping(value = "/gamePage")
     public ModelAndView toGamePage(@RequestParam("tableId") Integer tableId) {
         ModelAndView mv = new ModelAndView("game_page");
-        mv.addObject("players", gameService.getPlayersByTable(tableId));
         mv.addObject("tableId", tableId);
         return mv;
+    }
+
+    /**
+     * @param tableId 桌号
+     * @return 进入游戏页面
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     *      配合service的逻辑，若当前用户不在桌上（不是通过选桌页面进来的），重定向回选桌页面
+     */
+    @RequestMapping(value = "/loadGameInfo")
+    @ResponseBody
+    public Result loadGameInfo(@RequestParam("tableId") Integer tableId, HttpSession session) {
+        Result result = new Result();
+        User user = (User) session.getAttribute("user");
+        List<Player> players = gameService.getPlayersByTable(tableId,user);
+        if (players.size()==1 && players.get(0).getPlace() == -1){
+            result.setSuccess(false);
+            result.setError("请先选择您的位置");
+        } else {
+            result.setSuccess(true);
+            result.setData(players);
+        }
+        return result;
     }
 
     /**

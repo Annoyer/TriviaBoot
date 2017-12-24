@@ -1,6 +1,7 @@
 package com.ecnu.trivia.fliter;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -8,11 +9,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by joy12 on 2017/12/15.
  */
-public class LoginFliter implements Filter {
+@WebFilter(filterName="loginFilter",urlPatterns="/*")
+public class LoginFilter implements Filter {
+    private Logger logger = Logger.getLogger("LoginFliter");
 
     public static List<String> pattenURL = new ArrayList<String>();
 
@@ -22,9 +26,13 @@ public class LoginFliter implements Filter {
         pattenURL.add("user/login");
         pattenURL.add("user/signupPage");
         pattenURL.add("user/signup");
+        pattenURL.add(".js");
+        pattenURL.add(".css");
+
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+ //       logger.info("doFilter");
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         HttpSession session = httpRequest.getSession();

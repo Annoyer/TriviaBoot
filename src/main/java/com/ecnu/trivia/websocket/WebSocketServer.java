@@ -42,6 +42,7 @@ public class WebSocketServer {
 
     public static void removeTable(int tableId) {
         tables.remove(tableId);
+        new Game(tableId);
     }
 
     public static Game getTable(int tableId) {
@@ -62,6 +63,7 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(@PathParam("tableId") Integer tableId, @PathParam("userId") Integer userId, Session session) throws IOException {
+        logger.info("socket on open()");
         this.session = session;
         this.userId = userId;
         this.tableId = tableId;
@@ -80,6 +82,9 @@ public class WebSocketServer {
     /**
      * onClose
      * 连接关闭的操作
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     *      从桌上删除用户或删桌子之前，确定这个用户是正常地通过选桌页面入桌的，不然直接把这个用户的websocket删掉就好
      */
     @OnClose
     public void onClose() {
@@ -90,21 +95,23 @@ public class WebSocketServer {
             onlineCount--;
         }
         Game table = tables.get(this.tableId);
-        //有一个人掉线了，游戏就得结束
-        if (table != null) {
+
+        //确保当前用户是在桌上的（正常的通过选桌页面进来的）
+        if (table != null && table.hasPlayer(this.userId)) {
+            //有一个人掉线了，游戏就得结束
             if (table.isGameStart()) {
                 table.endGame();
-                logger.debug("桌号{}游戏强制结束", this.tableId);
+                logger.info("桌号{}游戏强制结束", this.tableId);
             } else {
                 table.remove(this.userId);
-                logger.debug("用户{}离开桌号{}", this.userId, this.tableId);
+                logger.info("用户{}离开桌号{}", this.userId, this.tableId);
                 if (table.getPlayers().size() == 0) {
                     removeTable(table.getTableId());
                 }
             }
 
         }
-        logger.debug("用户{}下线", this.userId);
+        logger.info("用户{}下线", this.userId);
     }
 
     /**

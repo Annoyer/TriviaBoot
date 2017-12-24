@@ -99,6 +99,19 @@ public class Game {
         this.gameStatus = gameStatus;
     }
 
+    /**
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     * 新增确定玩家是否在桌上的函数
+     */
+    public boolean hasPlayer(int userId){
+        for (Player player:players) {
+            if (player.getUser().getId() == userId){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * by j: 添加玩家，增加了user参数
@@ -120,7 +133,7 @@ public class Game {
                 boardcast(gameStatus.toString());
             }
         }
-        logger.info(userId + " was exit before game start");
+        logger.info(userId + " was exit before 'game start");
         logger.info("The total amount of players is " + players.size());
     }
 
