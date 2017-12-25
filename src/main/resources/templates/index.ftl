@@ -6,10 +6,18 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.min.js"></script>
+    <style>
+        .btn{
+            width: 150px;
+            font-size: 30px;
+            background-color: pink;
+            border-color: pink;
+        }
+    </style>
 </head>
-<body>
-<p>hello!!!</p>
-<a class="btn btn-primary" href="/user/loginPage">登录</a>
-<a class="btn btn-primary" href="/user/signupPage">注册</a>
+<body style="text-align: center">
+<p style="font-size: 200px;color: pink;">trivia</p>
+<a class="btn btn-primary btn-lg" href="/user/loginPage">登录</a>
+<a class="btn btn-primary btn-lg" href="/user/signupPage">注册</a>
 </body>
 </html>

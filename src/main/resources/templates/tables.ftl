@@ -4,16 +4,37 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>选桌</title>
+    <style>
+        img{
+            width: 150px;
+            cursor: pointer;
+        }
+        .info{
+            font-size: 50px;
+            margin: 50px;
+            color: grey;
+        }
+        .tableDiv{
+            margin: 50px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<h5>当前userId=${Session.user.id}</h5>
+<p class="info">${Session.user.username}，请选择游戏房间。</p>
+<div class="tablesDiv">
 <#list tables as t>
+<div class="tableDiv col-sm-4">
 <#if t.status ==0>
-<button onclick="chooseTable(${t.tableId})">加入${t.tableId}号桌</button>
+<img src="/img/table.png" onclick="chooseTable(${t.tableId})">
+<p>${t.tableId}号桌</p>
 <#else >
-<button onclick="chooseTable(${t.tableId})" disabled>加入${t.tableId}号桌</button>
+    <img src="/img/tableDisabled.png">
+    <p>${t.tableId}号桌</p>
 </#if>
+</div>
 </#list>
+    <div>
 <#--<c:forEach items="${tables}" var="t">
     <c:choose>
         <c:when test="${t.status==0}">

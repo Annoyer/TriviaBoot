@@ -15,8 +15,9 @@ public class GameStatus {
     private List<Player> players;
     private Question currentQuestion;
     private int currentPlayerId;
+    private int currentPlayerIndex; //记录当前玩家在players中的位置
     private String msg;
-    private int status;
+    private int status; //0.开始前玩家发生变化 1.第一轮游戏 2.掷骰子以后 3.回答正确 4.回答错误 -1.游戏结束
     private int dice;
     private boolean isFirstRound = true;
     private Player winner;
@@ -26,6 +27,7 @@ public class GameStatus {
         players = game.getPlayers();
         currentPlayerId = game.getCurrentPlayerId();
         status = game.getStatus();
+        currentPlayerIndex=game.getCurrentPlayer();
     }
 
     public Player getWinner() {
@@ -59,6 +61,10 @@ public class GameStatus {
     public void setCurrentPlayerId(int currentPlayerId) {
         this.currentPlayerId = currentPlayerId;
     }
+
+    public int getCurrentPlayerIndex() { return currentPlayerIndex; }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) { this.currentPlayerIndex=currentPlayerIndex; }
 
     public String getMsg() {
         return msg;

@@ -1,6 +1,7 @@
 package com.ecnu.trivia.fliter;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Created by joy12 on 2017/12/15.
  */
+@WebFilter(filterName="loginFilter",urlPatterns="/*")
 public class LoginFliter implements Filter {
 
     public static List<String> pattenURL = new ArrayList<String>();
@@ -22,6 +24,8 @@ public class LoginFliter implements Filter {
         pattenURL.add("user/login");
         pattenURL.add("user/signupPage");
         pattenURL.add("user/signup");
+        pattenURL.add(".js");
+        pattenURL.add(".css");
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

@@ -14,13 +14,13 @@ public interface GameService {
 
     List<Game> getAllTables();
 
-    List<Player> getPlayersByTable(int tableId);
+    List<Player> getPlayersByTable(int tableId,User user);
 
     boolean userChooseTable(int tableId, User user, int initialPlace);
 
     void setPlayerReady(int tableId, int playerId);
 
-    void stopDice(int tableId);
+    void stopDice(int tableId,int num);
 
     void answerQuestion(int tableId, boolean isCorrect);
 

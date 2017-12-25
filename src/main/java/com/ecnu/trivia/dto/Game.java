@@ -295,6 +295,7 @@ public class Game {
     private void nextPlayer() {
         currentPlayer++;
         if (currentPlayer == players.size()) currentPlayer = 0;
+        gameStatus.setCurrentPlayerIndex(currentPlayer);
         gameStatus.setCurrentPlayerId(players.get(currentPlayer).getUser().getId());
     }
 
@@ -379,6 +380,7 @@ public class Game {
             status = 1;
             currentPlayer = 0;
             gameStatus.setCurrentPlayerId(players.get(currentPlayer).getUser().getId());
+            gameStatus.setCurrentPlayerIndex(currentPlayer);
             gameStatus.setStatus(status);
             boardcast(gameStatus.toString());
             gameStatus.setFirstRound(false);
@@ -448,6 +450,20 @@ public class Game {
             e.printStackTrace();
         }
         logger.addHandler(fileHandler);
+    }
+
+    /**
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     * 新增确定玩家是否在桌上的函数
+     */
+    public boolean hasPlayer(int userId){
+        for (Player player:players) {
+            if (player.getUser().getId() == userId){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

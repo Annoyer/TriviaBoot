@@ -41,6 +41,6 @@ public class UserServiceImpl implements UserService {
         } else {
             userDao.updateLoseCount(user.getId(),user.getLoseCount()+1);
         }
-        return false;
+        return true;
     }
 }

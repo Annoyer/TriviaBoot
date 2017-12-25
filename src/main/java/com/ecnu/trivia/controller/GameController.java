@@ -1,6 +1,7 @@
 package com.ecnu.trivia.controller;
 
 
+import com.ecnu.trivia.dto.Player;
 import com.ecnu.trivia.dto.Result;
 import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.GameService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by joy12 on 2017/12/9.
@@ -42,13 +44,38 @@ public class GameController {
     /**
      * @param tableId 桌号
      * @return 进入游戏页面
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     *      配合service的逻辑，若当前用户不在桌上（不是通过选桌页面进来的），重定向回选桌页面
      */
     @RequestMapping(value = "/gamePage")
     public ModelAndView toGamePage(@RequestParam("tableId") Integer tableId) {
         ModelAndView mv = new ModelAndView("game_page");
-        mv.addObject("players", gameService.getPlayersByTable(tableId));
         mv.addObject("tableId", tableId);
         return mv;
+    }
+
+    /**
+     * @param tableId 桌号
+     * @return 进入游戏页面
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     *      配合service的逻辑，若当前用户不在桌上（不是通过选桌页面进来的），重定向回选桌页面
+     */
+    @RequestMapping(value = "/loadGameInfo")
+    @ResponseBody
+    public Result loadGameInfo(@RequestParam("tableId") Integer tableId, HttpSession session) {
+        Result result = new Result();
+        User user = (User) session.getAttribute("user");
+        List<Player> players = gameService.getPlayersByTable(tableId,user);
+        if (players.size()==1 && players.get(0).getPlace() == -1){
+            result.setSuccess(false);
+            result.setError("请先选择您的位置");
+        } else {
+            result.setSuccess(true);
+            result.setData(players);
+        }
+        return result;
     }
 
     /**
@@ -92,13 +119,13 @@ public class GameController {
 
     /**
      * 玩家按下暂停骰子按钮
-     *
+     *c:骰子点数改为从前台传入
      * @param tableId 桌号
      */
     @RequestMapping(value = "/stopDice")
     @ResponseBody
-    public void stopDice(@RequestParam("tableId") Integer tableId) {
-        gameService.stopDice(tableId);
+    public void stopDice(@RequestParam("tableId") Integer tableId,@RequestParam("num") Integer num) {
+        gameService.stopDice(tableId,num);
     }
 
     /**

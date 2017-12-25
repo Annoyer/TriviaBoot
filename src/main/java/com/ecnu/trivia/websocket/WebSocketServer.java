@@ -81,30 +81,36 @@ public class WebSocketServer {
     /**
      * onClose
      * 连接关闭的操作
+     * 修改记录：
+     * 2017.12.24 by.jcy
+     *      从桌上删除用户或删桌子之前，确定这个用户是正常地通过选桌页面入桌的，不然直接把这个用户的websocket删掉就好
      */
     @OnClose
     public void onClose() {
+        logger.info("socket on close()");
         //移除当前用户终端登录的websocket信息,如果该用户下线了，则删除该用户的记录
         if (userSocket.get(this.userId) != null) {
             userSocket.remove(this.userId);
             onlineCount--;
         }
         Game table = tables.get(this.tableId);
-        //有一个人掉线了，游戏就得结束
-        if (table != null) {
+
+        //确保当前用户是在桌上的（正常的通过选桌页面进来的）
+        if (table != null && table.hasPlayer(this.userId)) {
+            //有一个人掉线了，游戏就得结束
             if (table.isGameStart()) {
                 table.endGame();
-                logger.debug("桌号{}游戏强制结束", this.tableId);
+                logger.info("桌号{}游戏强制结束", this.tableId);
             } else {
                 table.remove(this.userId);
-                logger.debug("用户{}离开桌号{}", this.userId, this.tableId);
+                logger.info("用户{}离开桌号{}", this.userId, this.tableId);
                 if (table.getPlayers().size() == 0) {
                     removeTable(table.getTableId());
                 }
             }
 
         }
-        logger.debug("用户{}下线", this.userId);
+        logger.info("用户{}下线", this.userId);
     }
 
     /**

@@ -6,17 +6,30 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.min.js"></script>
+    <style>
+        #myForm{
+            margin: 100px;
+        }
+        .btn{
+            background-color:indianred ;
+            border-color:indianred ;
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
-<div id="myForm">
-    <div>
-        用户名:
-        <input type="text" id="username" placeholder="用户名"></br>
-        密 码:
-        <input type="password" id="password" placeholder="密码"><br>
-        </br>
-        <button onclick="signup()">注册</button>
+<div id="myForm" style="text-align: center">
+    <div id="myForm" class="form-horizontal">
+        <p style="font-size: 60px;color: indianred">注册</p>
+        <div class="form-group">
+            <input type="text" class="form-control" id="username" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder="请输入密码">
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="signup()">注册</button>
     </div>
+
 </div>
 </body>
 <script>
