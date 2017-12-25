@@ -5,7 +5,6 @@ import com.ecnu.trivia.dto.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.server.standard.SpringConfigurator;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -43,6 +42,7 @@ public class WebSocketServer {
 
     public static void removeTable(int tableId) {
         tables.remove(tableId);
+        new Game(tableId);
     }
 
     public static Game getTable(int tableId) {
@@ -63,6 +63,7 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(@PathParam("tableId") Integer tableId, @PathParam("userId") Integer userId, Session session) throws IOException {
+        logger.info("socket on open()");
         this.session = session;
         this.userId = userId;
         this.tableId = tableId;
