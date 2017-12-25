@@ -88,8 +88,8 @@
 
 <script src="/js/three/Detector.js"></script>
 <script src="/js/three/stats.min.js"></script>
-<script src="js/three/BinaryLoader.js"></script>
-
+<script src="/js/three/BinaryLoader.js"></script>
+<script src="/js/sockjs.min.js"></script>
 
 <script type="text/javascript">
     var gameStatus = null;
@@ -97,11 +97,18 @@
     $(function () {
         if ('WebSocket' in window) {
             console.log("此浏览器支持websocket");
-            websocket = new WebSocket("ws://localhost:8080/websocket/${tableId}/${Session.user.id}");
+            //本地
+            websocket = new WebSocket("ws://localhost:8080/websocket?tableId=${tableId}");
+            //服务器
+            //websocket = new WebSocket("ws://122.152.197.158:10000/websocket?tableId=${tableId}");
         } else if ('MozWebSocket' in window) {
             alert("此浏览器只支持MozWebSocket");
         } else {
-            alert("此浏览器只支持SockJS");
+            console.log("此浏览器只支持SockJS");
+            //本地
+            websocket = new SocketJs("http://localhost:8080/sockjs/websocket?tableId=${tableId}");
+            //服务器
+            //websocket = new SocketJs("http://122.152.197.158:10000/sockjs/websocket?tableId=${tableId}");
         }
         websocket.onopen = function (evnt) {
            // alert("链接服务器成功!");
