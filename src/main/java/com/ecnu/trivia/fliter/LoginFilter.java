@@ -14,7 +14,7 @@ import java.util.List;
  * Created by joy12 on 2017/12/15.
  */
 @WebFilter(filterName="loginFilter",urlPatterns="/*")
-public class LoginFliter implements Filter {
+public class LoginFilter implements Filter {
 
     public static List<String> pattenURL = new ArrayList<String>();
 
