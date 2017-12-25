@@ -466,18 +466,6 @@ public class Game {
         logger.addHandler(fileHandler);
     }
 
-    /**
-     * 修改记录：
-     * 2017.12.24 by.jcy
-     * 新增确定玩家是否在桌上的函数
-     */
-    public boolean hasPlayer(int userId){
-        for (Player player:players) {
-            if (player.getUser().getId() == userId){
-                return true;
-            }
-        }
-        return false;
-    }
+
 
 }
