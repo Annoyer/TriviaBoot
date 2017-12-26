@@ -2,9 +2,9 @@ package com.ecnu.trivia.controller;
 
 import com.ecnu.trivia.BaseTest;
 import com.ecnu.trivia.dto.Result;
+import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,29 +22,37 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by joy12 on 2017/12/24.
  */
-@AutoConfigureMockMvc
+//@AutoConfigureMockMvc
 public class UserControllerTest extends BaseTest {
 
-    @Autowired
+//   @Autowired
     //controller层要用MockMvc
     private MockMvc mvc;
 
     @Autowired
     private WebApplicationContext wac;
 
+    @Mock
+    private UserService userService;
+
+    @Autowired
+    @InjectMocks
+    private UserController userController;
+
 
     //初始化执行
     @Before
     public void setUp() throws Exception {
         //MockMvcBuilders使用构建MockMvc对象   （项目拦截器有效）
-        mvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        //mvc = MockMvcBuilders.standaloneSetup(userController).build();
+        //mvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        mvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     //测试完后，数据库事务回滚
@@ -66,6 +74,9 @@ public class UserControllerTest extends BaseTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .param("username","j")
                 .param("password","jjj");
+        //mock从service中获得的数据
+        User returnUser = new User(5,"jjj","j",1,0,0);
+        when(userService.login(any(User.class))).thenReturn(returnUser);
         //预期返回的result
         Result successResult = new Result(true);
         //发送请求
@@ -88,7 +99,7 @@ public class UserControllerTest extends BaseTest {
                 .param("password","hahaha");
 
         Result failResult = new Result(false);
-
+        when(userService.login(any(User.class))).thenReturn(null);
         mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
