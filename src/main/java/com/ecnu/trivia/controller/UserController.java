@@ -72,7 +72,7 @@ public class UserController {
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
     public Result login(User user,HttpServletRequest httpServletRequest) {
-        User loginUser=userService.login(user);
+        User loginUser = userService.login(user);
         if(loginUser==null){
           return new Result(false);
         }

@@ -37,7 +37,7 @@ public class UserDaoTest extends BaseTest {
     @Test
     public void testGetUser(){
         User user=userDao.getUser("c","1");
-        assertEquals(4,user.getId());
+        assertEquals(new Integer(4),user.getId());
     }
 
     @Test

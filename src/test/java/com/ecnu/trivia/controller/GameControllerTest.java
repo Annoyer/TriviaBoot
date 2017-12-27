@@ -71,7 +71,18 @@ public class GameControllerTest extends BaseTest {
         mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("tables"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("tables"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
+    public void getAllTableInfo() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/game/getAllTables")
+                .session(session);
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }

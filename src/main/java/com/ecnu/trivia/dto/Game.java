@@ -106,7 +106,7 @@ public class Game {
      */
     public boolean hasPlayer(int userId){
         for (Player player:players) {
-            if (player.getUser().getId() == userId){
+            if (player.getUser().getId().equals(userId)){
                 return true;
             }
         }
@@ -144,7 +144,7 @@ public class Game {
      */
     public void setReady(Integer userId) {
         for (Player player : players) {
-            if (player.getUser().getId() == userId) {
+            if (player.getUser().getId().equals(userId)) {
                 player.setIsReady(true);
                 logger.info(player.getUser().getUsername() + " was ready");
                 boardcast(gameStatus.toString());
