@@ -146,7 +146,7 @@ public class WebSocketServer implements WebSocketHandler {
         return false;
     }
 
-    public static void broadcastToUserInTablesPage(){
+    public static boolean broadcastToUserInTablesPage(){
         JSONArray array = new JSONArray();
         for (Game t: tables.values()) {
             array.add(t.getGameStatus().toString());
@@ -157,8 +157,10 @@ public class WebSocketServer implements WebSocketHandler {
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.debug("发送消息失败");
+                return false;
             }
         }
+        return true;
     }
 
     public static void addTable(Game game) {
