@@ -76,4 +76,9 @@ public class User {
     public void setLoseCount(int loseCount) {
         this.loseCount = loseCount;
     }
+
+    public String toString(){
+        return "[id="+id+",username="+username+",password="+password+",level="+
+                level+",winCount="+winCount+",loseCount="+loseCount;
+    }
 }

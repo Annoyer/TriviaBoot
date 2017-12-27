@@ -4,6 +4,9 @@ package com.ecnu.trivia.service.impl;
 import com.ecnu.trivia.dao.UserDao;
 import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.UserService;
+import com.ecnu.trivia.websocket.WebSocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +23,8 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         else{
-        Integer id=userDao.addUser(user);
-        return userDao.getUserById(id);
+        userDao.addUser(user);
+        return user;
         }
     }
 
@@ -37,9 +40,13 @@ public class UserServiceImpl implements UserService {
             if (winCount == level+level*(level-1)*0.5){//d=1的等差数列（1 2 3 4 5 6……）
                 level++;
             }
+            System.out.println("userDao.updateWinCountAndLevel("+user.getId()+","+winCount+","+level+")");
             userDao.updateWinCountAndLevel(user.getId(),winCount,level);
+
         } else {
+            System.out.println("userDao.updateLoseCount("+user.getId()+","+(user.getLoseCount()+1)+")");
             userDao.updateLoseCount(user.getId(),user.getLoseCount()+1);
+
         }
         return true;
     }
