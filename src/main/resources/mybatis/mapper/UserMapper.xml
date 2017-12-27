@@ -2,9 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecnu.trivia.dao.UserDao">
     <insert id="addUser" parameterType="com.ecnu.trivia.model.User" useGeneratedKeys="true" keyProperty="id">
-        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
         INSERT INTO player(username,password)
       VALUES (#{username},#{password})
     </insert>
