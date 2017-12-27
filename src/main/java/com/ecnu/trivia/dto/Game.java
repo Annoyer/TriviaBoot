@@ -30,7 +30,7 @@ public class Game {
     private int currentPlayer = -1;//当前轮到的player序号
 
     private static Logger logger = Logger.getLogger("kata.trivia.Game");
-    private static FileHandler fileHandler = null;
+//    private static FileHandler fileHandler = null;
 
     // by j：游戏状态 ：-1-游戏结束 0-游戏准备阶段  1-游戏开始 2-显示骰子点数和问题 3-回答正确 4-回答错误
     private int status = 0;
@@ -39,14 +39,14 @@ public class Game {
     // by j：一个bean，用来装游戏进行中，通过websocket更新的游戏状态
     private GameStatus gameStatus = null;
     // by j：用来给别的websocket发广播的，总控websocket
-    private WebSocketServer gameSocket = null;
+    //private WebSocketServer gameSocket = null;
 
     public Game(int tableId) {
         this.tableId = tableId;
-        gameSocket = new WebSocketServer();
-        gameSocket.addTable(this);
+//        gameSocket = new WebSocketServer();
+//        gameSocket.addTable(this);
         gameStatus = new GameStatus(this);
-        logToAFile();
+//        logToAFile();
     }
 
     /* setters and getters */
@@ -71,9 +71,9 @@ public class Game {
         return status;
     }
 
-    public void setPlayers(CopyOnWriteArrayList<Player> players) {
-        this.players = players;
-    }
+//    public void setPlayers(CopyOnWriteArrayList<Player> players) {
+//        this.players = players;
+//    }
 
     public int getCurrentPlayer() {
         return currentPlayer;
@@ -119,6 +119,7 @@ public class Game {
     public void add(String playerName, User user, int initialPlace) {
         players.add(new Player(playerName, user, initialPlace));
         boardcast(gameStatus.toString());
+        WebSocketServer.broadcastToUserInTablesPage();
         logger.info(playerName + " was added");
         logger.info("The total amount of players is " + players.size());
     }
@@ -133,6 +134,7 @@ public class Game {
                 boardcast(gameStatus.toString());
             }
         }
+        WebSocketServer.broadcastToUserInTablesPage();
         logger.info(userId + " was exit before 'game start");
         logger.info("The total amount of players is " + players.size());
     }
@@ -149,6 +151,7 @@ public class Game {
                 return;
             }
         }
+        WebSocketServer.broadcastToUserInTablesPage();
         logger.info(userId + " was not found!");
     }
 
@@ -391,6 +394,7 @@ public class Game {
     public boolean startGame() {
         logger.info("------------------------游戏开始--------------------------");
         if (boardcast("start") == 0) {
+            WebSocketServer.broadcastToUserInTablesPage();
             status = 1;
             currentPlayer = 0;
             gameStatus.setCurrentPlayerId(players.get(currentPlayer).getUser().getId());
@@ -420,8 +424,9 @@ public class Game {
         }
         gameStatus.setWinner(winner);
         boardcast(gameStatus.toString());
-        gameSocket.removeTable(tableId);
-        // do something to database
+        WebSocketServer.removeTable(tableId);
+        WebSocketServer.broadcastToUserInTablesPage();
+
         logger.info("--------------------游戏结束，结算完毕--------------------");
     }
 
@@ -434,37 +439,51 @@ public class Game {
     private int boardcast(String msg) {
         int result = 0;
         for (Player player : players) {
-            if (!gameSocket.sendMessageToUser(player.getUser().getId(), msg)) {
+            if (player.isConnected()) {
+                if (!WebSocketServer.sendMessageToUserInGame(player.getUser().getId(), msg)) {
+                    result++;
+                }
+            } else {
                 result++;
+                logger.info("连接未完成，未向用户"+player.getUser().getId()+"发送消息！");
             }
         }
         return result;
     }
 
-    /**
-     * by j 给指定的某个玩家发一条消息
-     * 目前没用到，先放着。。。
-     *
-     * @param msg
-     * @return 是否发送成功
-     */
-    private boolean unicast(Player target, String msg) {
-        return gameSocket.sendMessageToUser(target.getUser().getId(), msg);
-    }
-
-
-    /* log */
-    private void logToAFile() {
-        try {
-            fileHandler = new FileHandler("%h/Game-logging.log"
-                    , MAX_NUMBER_OF_BYTES_WRITING_TO_ONE_FILE
-                    , NUMBER_OF_FILES_TO_USE, true);
-            fileHandler.setFormatter(new SimpleFormatter());
-        } catch (IOException e) {
-            e.printStackTrace();
+    public Player getPlayer(int userId){
+        for (Player p: players) {
+            if (p.getUser().getId().equals(userId)){
+                return p;
+            }
         }
-        logger.addHandler(fileHandler);
+        return null;
     }
+
+//    /**
+//     * by j 给指定的某个玩家发一条消息
+//     * 目前没用到，先放着。。。
+//     *
+//     * @param msg
+//     * @return 是否发送成功
+//     */
+//    private boolean unicast(Player target, String msg) {
+//        return gameSocket.sendMessageToUser(target.getUser().getId(), msg);
+//    }
+
+
+//    /* log */
+//    private void logToAFile() {
+//        try {
+//            fileHandler = new FileHandler("%h/Game-logging.log"
+//                    , MAX_NUMBER_OF_BYTES_WRITING_TO_ONE_FILE
+//                    , NUMBER_OF_FILES_TO_USE, true);
+//            fileHandler.setFormatter(new SimpleFormatter());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        logger.addHandler(fileHandler);
+//    }
 
 
 

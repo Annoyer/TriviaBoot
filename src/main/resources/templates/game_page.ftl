@@ -106,9 +106,9 @@
         } else {
             console.log("此浏览器只支持SockJS");
             //本地
-            websocket = new SocketJs("http://localhost:8080/sockjs/websocket?tableId=${tableId}");
+            //websocket = new SocketJs("http://localhost:8080/sockjs/websocket?tableId=${tableId}");
             //服务器
-            //websocket = new SocketJs("http://122.152.197.158:10000/sockjs/websocket?tableId=${tableId}");
+            websocket = new SocketJs("http://122.152.197.158:10000/sockjs/websocket?tableId=${tableId}");
         }
         websocket.onopen = function (evnt) {
            // alert("链接服务器成功!");
@@ -401,10 +401,9 @@
     }
 
     function exit() {
-        if (websocket != null) {
-            websocket.close();
-            websocket = null;
-        }
+//        if (websocket != null) {
+//            websocket.close();
+//        }
         window.location.href = '/game/tables';
     }
 

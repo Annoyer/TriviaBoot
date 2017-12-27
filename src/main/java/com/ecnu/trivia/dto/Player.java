@@ -31,7 +31,16 @@ public class Player {
 
     //添加的属性
     private boolean isReady = false;//by j: 玩家是否同意游戏开始
+    private boolean isConnected = false;
     private User user; //by j: Player是游戏时的玩家角色，User是对应的用户，Player生成时初始化绑定
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void setConnected(boolean connected) {
+        isConnected = connected;
+    }
 
     public String getPlayerName() {
         return playerName;

@@ -38,21 +38,21 @@ public class QuestionMaker {
         rockQuestions.addAll(rockQuestion);
     }
 
-    public void addPopQuestion(Question popQuestion) {
-        popQuestions.add(popQuestion);
-    }
-
-    public void addScienceQuestion(Question scienceQuestion) {
-        scienceQuestions.add(scienceQuestion);
-    }
-
-    public void addSportsQuestion(Question sportsQuestion) {
-        sportsQuestions.add(sportsQuestion);
-    }
-
-    public void addRockQuestion(Question rockQuestion) {
-        rockQuestions.add(rockQuestion);
-    }
+//    public void addPopQuestion(Question popQuestion) {
+//        popQuestions.add(popQuestion);
+//    }
+//
+//    public void addScienceQuestion(Question scienceQuestion) {
+//        scienceQuestions.add(scienceQuestion);
+//    }
+//
+//    public void addSportsQuestion(Question sportsQuestion) {
+//        sportsQuestions.add(sportsQuestion);
+//    }
+//
+//    public void addRockQuestion(Question rockQuestion) {
+//        rockQuestions.add(rockQuestion);
+//    }
 
     /**
      * 分配问题的方式从拿出队列的第一个问题并将其删去，改成随机访问队列中的任意一个问题

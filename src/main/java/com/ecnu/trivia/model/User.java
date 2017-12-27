@@ -4,14 +4,14 @@ package com.ecnu.trivia.model;
  * Created by joy12 on 2017/12/3.
  */
 public class User {
-    private int id;
+    private Integer id;
     private String password;
     private String username;
-    private int level;
-    private int winCount;
-    private int loseCount;
+    private Integer level;
+    private Integer winCount;
+    private Integer loseCount;
 
-    public User(int id, String password, String username, int level, int winCount, int loseCount) {
+    public User(Integer id, String password, String username, Integer level, Integer winCount, Integer loseCount) {
         this.id = id;
         this.password = password;
         this.username = username;
@@ -29,7 +29,7 @@ public class User {
         this.password=password;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -53,27 +53,27 @@ public class User {
         this.password = password;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
-    public int getWinCount() {
+    public Integer getWinCount() {
         return winCount;
     }
 
-    public void setWinCount(int winCount) {
+    public void setWinCount(Integer winCount) {
         this.winCount = winCount;
     }
 
-    public int getLoseCount() {
+    public Integer getLoseCount() {
         return loseCount;
     }
 
-    public void setLoseCount(int loseCount) {
+    public void setLoseCount(Integer loseCount) {
         this.loseCount = loseCount;
     }
 

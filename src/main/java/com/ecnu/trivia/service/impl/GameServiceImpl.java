@@ -34,7 +34,9 @@ public class GameServiceImpl implements GameService {
             if (itable != null){
                 games.add(itable);
             } else {
-                games.add(new Game(i));
+                Game newGame = new Game(i);
+                WebSocketServer.addTable(newGame);
+                games.add(newGame);
             }
         }
         return games;
@@ -51,14 +53,13 @@ public class GameServiceImpl implements GameService {
         List<Player> playerList = new ArrayList<Player>();
 
         Game game = WebSocketServer.getTable(tableId);
-        List<Player> currentList = game.getPlayers();
 
         boolean isOnTable = game.hasPlayer(user.getId());
 
         if (!isOnTable){
             playerList.add(new Player(null,null,-1));
         } else {
-            playerList.addAll(currentList);
+            playerList.addAll(game.getPlayers());
         }
 
         return playerList;
@@ -72,11 +73,11 @@ public class GameServiceImpl implements GameService {
      */
     public boolean userChooseTable(int tableId, User user, int initialPlace) {
         Game table = WebSocketServer.getTable(tableId);
-        //如果是空桌，先把桌子加进map
-        if (table == null){
-            table = new Game(tableId);
-            WebSocketServer.addTable(table);
-        }
+//        //如果是空桌，先把桌子加进map
+//        if (table == null){
+//            table = new Game(tableId);
+//            WebSocketServer.addTable(table);
+//        }
 
         //若游戏不在进行中，且未满员，加桌成功
         if (!table.isEnoughPlayer() && !table.isGameStart()){
@@ -90,8 +91,6 @@ public class GameServiceImpl implements GameService {
 
     /**
      * 玩家准备，同时检查，如果该桌所有人都ready且满员，则游戏开始
-     *
-     * ---- 这个方法还没写完，差注释掉的那部分（在游戏开始之前去数据库拿问题并装载）
      * @param tableId
      * @param userId
      */

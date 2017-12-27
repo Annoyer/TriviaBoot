@@ -31,14 +31,28 @@ public class GameController {
     private UserService userService;
 
     /**
+     * 修改记录：
+     * 2017.12.27 在选桌页面也加了websocket连接，做成动态显示桌子情况
      * @return 所有游戏桌页面
      * ok
      */
     @RequestMapping(value = "/tables")
-    public ModelAndView toTables() {
-        ModelAndView mv = new ModelAndView("tables");
-        mv.addObject("tables", gameService.getAllTables());
-        return mv;
+    public String toTables() {
+        return "tables";
+    }
+
+    /**
+     * 修改记录：
+     * 2017.12.27 新增。在选桌页面也加了websocket连接，做成动态显示桌子情况
+     * @return 所有游戏桌页面
+     *
+     */
+    @RequestMapping(value = "/getAllTables")
+    @ResponseBody
+    public Result getAllTablesInfo() {
+        Result result = new Result(true);
+        result.setData(gameService.getAllTables());
+        return result;
     }
 
     /**
