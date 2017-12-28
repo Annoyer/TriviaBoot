@@ -21,13 +21,13 @@ public class Game {
     public static final int NUMBER_OF_GOLD_COINS_TO_WON_AND_GAME_OVER = 6;
     public static final int MAX_NUMBER_OF_BYTES_WRITING_TO_ONE_FILE = 10000000;
     public static final int NUMBER_OF_FILES_TO_USE = 1;
-    public static final int NUMBER_OF_NEEDED_PLAYER = 2;//by j：游戏开始所必须的玩家数
+    public static final int NUMBER_OF_NEEDED_PLAYER = 4;//by j：游戏开始所必须的玩家数
 
-    private final QuestionMaker questionMaker = new QuestionMaker();
+    private final QuestionMaker questionMaker;
 
-    private CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
+    private CopyOnWriteArrayList<Player> players;
 
-    private int currentPlayer = -1;//当前轮到的player序号
+    private int currentPlayer;//当前轮到的player序号
 
     private static Logger logger = Logger.getLogger("kata.trivia.Game");
 //    private static FileHandler fileHandler = null;
@@ -42,16 +42,19 @@ public class Game {
     //private WebSocketServer gameSocket = null;
 
     public Game(int tableId) {
-        this.tableId = tableId;
+        setTableId(tableId);
+        currentPlayer = -1;
 //        gameSocket = new WebSocketServer();
 //        gameSocket.addTable(this);
-        gameStatus = new GameStatus(this);
+        questionMaker = new QuestionMaker();
+        players = new CopyOnWriteArrayList<Player>();
+        setGameStatus(new GameStatus(this));
 //        logToAFile();
     }
 
     /* setters and getters */
     public int getCurrentPlayerId() {
-        if (currentPlayer > 0) {
+        if (currentPlayer >= 0) {
             return players.get(currentPlayer).getUser().getId();
         } else {
             return currentPlayer;
@@ -148,7 +151,7 @@ public class Game {
                 player.setIsReady(true);
                 logger.info(player.getUser().getUsername() + " was ready");
                 boardcast(gameStatus.toString());
-                return;
+                break;
             }
         }
         WebSocketServer.broadcastToUserInTablesPage();
@@ -175,7 +178,8 @@ public class Game {
      */
     public void roll(int rollingNumber) {
         gameStatus.setDice(rollingNumber);
-        gameStatus.setStatus(2);
+        setStatus(2);
+        gameStatus.setStatus(status);
 
         logger.info(players.get(currentPlayer) + " is the current player");
         logger.info("They have rolled a " + rollingNumber);
@@ -246,14 +250,13 @@ public class Game {
         if (players.get(currentPlayer).getCurrentCategory().equals("Rock")) {
             question = questionMaker.distributeRockQuestion();
         }
-
-
-        if (question != null) {
-            logger.info(question.getTitle());
-        } else {
-            logger.info("没有该类问题");
-            question = new Question("没有该类问题,继续游戏请传null给本对象判断函数");
-        }
+//
+//        if (question != null) {
+//            logger.info(question.getTitle());
+//        } else {
+//            logger.info("没有该类问题");
+//            question = new Question("没有该类问题,继续游戏请传null给本对象判断函数");
+//        }
 
         gameStatus.setCurrentQuestion(question);
         return question;
@@ -267,14 +270,15 @@ public class Game {
      */
     public void answeredCorrectly() {
         //只有出错的情况会调这个分支
-        if (players.get(currentPlayer).isInPenaltyBox()) {
-            nextPlayer();
-            boardcast("error");
-            return;
-        }
+//        if (players.get(currentPlayer).isInPenaltyBox()) {
+//            nextPlayer();
+//            boardcast("error");
+//            return;
+//        }
         if (currentPlayerGetsAGoldCoinAndSelectNextPlayer()) {
             //还没有人赢，只更新位置和分数
-            gameStatus.setStatus(3);
+            setStatus(3);
+            gameStatus.setStatus(status);
             boardcast(gameStatus.toString());
         } else {
             //有人赢了，结算结果并更新游戏状态
@@ -296,7 +300,7 @@ public class Game {
 
         logger.info(players.get(currentPlayer)
                 + " now has "
-                + players.get(currentPlayer).countGoldCoins()
+                + players.get(currentPlayer).getSumOfGoldCoins()
                 + " Gold Coins.");
 
         boolean isGameStillInProgress = isGameStillInProgress();
@@ -326,7 +330,8 @@ public class Game {
 
         players.get(currentPlayer).sentToPenaltyBox();
         nextPlayer();
-        gameStatus.setStatus(4);
+        setStatus(4);
+        gameStatus.setStatus(status);
         boardcast(gameStatus.toString());
     }
 
@@ -336,7 +341,7 @@ public class Game {
      * @return 游戏是否仍要继续
      */
     private boolean isGameStillInProgress() {
-        return !(players.get(currentPlayer).countGoldCoins() == NUMBER_OF_GOLD_COINS_TO_WON_AND_GAME_OVER);
+        return !(players.get(currentPlayer).getSumOfGoldCoins() == NUMBER_OF_GOLD_COINS_TO_WON_AND_GAME_OVER);
     }
 
     /**
@@ -345,7 +350,7 @@ public class Game {
      * @return 游戏是否仍要继续
      */
     public boolean isGameStart() {
-        return status == 1;
+        return status > 0;
     }
 
     /**
@@ -391,21 +396,22 @@ public class Game {
      *
      * @return 游戏是否成功开始
      */
-    public boolean startGame() {
+    public void startGame() {
         logger.info("------------------------游戏开始--------------------------");
-        if (boardcast("start") == 0) {
-            WebSocketServer.broadcastToUserInTablesPage();
-            status = 1;
-            currentPlayer = 0;
-            gameStatus.setCurrentPlayerId(players.get(currentPlayer).getUser().getId());
-            gameStatus.setCurrentPlayerIndex(currentPlayer);
-            gameStatus.setStatus(status);
-            boardcast(gameStatus.toString());
-            gameStatus.setFirstRound(false);
-            return true;
-        } else {
-            return false;
-        }
+   //     if (boardcast("start") == 0) {
+        boardcast("start");
+        WebSocketServer.broadcastToUserInTablesPage();
+        setStatus(1);
+        currentPlayer = 0;
+        gameStatus.setCurrentPlayerId(players.get(currentPlayer).getUser().getId());
+        gameStatus.setCurrentPlayerIndex(currentPlayer);
+        gameStatus.setStatus(status);
+        boardcast(gameStatus.toString());
+        gameStatus.setFirstRound(false);
+//        return true;
+//        } else {
+//            return false;
+//        }
     }
 
     /**
@@ -413,12 +419,12 @@ public class Game {
      */
     public void endGame() {
         logger.info("--------------------游戏结束，开始结算--------------------");
-        status = -1;
+        setStatus(-1);
         gameStatus.setStatus(status);
         Player winner = null;
         for (Player player : players) {
-            logger.info(player.toString() + " : " + player.countGoldCoins() + " 个金币");
-            if (player.countGoldCoins() == 6) {
+            logger.info(player.toString() + " : " + player.getSumOfGoldCoins() + " 个金币");
+            if (player.getSumOfGoldCoins() == 6) {
                 winner = player;
             }
         }
@@ -444,7 +450,6 @@ public class Game {
                     result++;
                 }
             } else {
-                result++;
                 logger.info("连接未完成，未向用户"+player.getUser().getId()+"发送消息！");
             }
         }
@@ -452,12 +457,14 @@ public class Game {
     }
 
     public Player getPlayer(int userId){
+        Player player = null;
         for (Player p: players) {
             if (p.getUser().getId().equals(userId)){
-                return p;
+                player = p;
+                break;
             }
         }
-        return null;
+        return player;
     }
 
 //    /**

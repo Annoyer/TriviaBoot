@@ -16,6 +16,7 @@ import java.util.Map;
  * Created by joy12 on 2017/12/25.
  */
 public class WebSocketServer implements WebSocketHandler {
+
     //日志记录
     private static Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
 

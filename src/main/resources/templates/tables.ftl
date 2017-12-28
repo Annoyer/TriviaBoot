@@ -107,7 +107,7 @@
         $("#dataDiv").html(tables);
         var str = "";
         $.each (tables, function(i,t){
-            if (t.status == 0 && t.players.length < 2){
+            if (t.status == 0 && t.players.length < 4){
                 str += '<button onclick="chooseTable(' + t.tableId + ')">加入' + t.tableId + '号桌</button>';
             } else {
                 str += '<button onclick="chooseTable(' + t.tableId + ')" disabled>加入' + t.tableId + '号桌</button>';

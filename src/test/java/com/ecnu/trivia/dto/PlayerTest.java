@@ -111,9 +111,9 @@ public class PlayerTest {
     @Test
     public void winAGoldCoin() throws Exception {
         Player player = new Player(user.getUsername(),user,0);
-        int oldCount = player.countGoldCoins();
+        int oldCount = player.getSumOfGoldCoins();
         player.winAGoldCoin();
-        Assert.assertEquals(oldCount+1,player.countGoldCoins());
+        Assert.assertEquals(oldCount+1,player.getSumOfGoldCoins());
     }
 
     @Test
@@ -123,9 +123,9 @@ public class PlayerTest {
         field.setAccessible(true);
 
         field.set(player,1);
-        Assert.assertEquals(player.countGoldCoins(),field.get(player));
+        Assert.assertEquals(player.getSumOfGoldCoins(),field.get(player));
         field.set(player,5);
-        Assert.assertEquals(player.countGoldCoins(),field.get(player));
+        Assert.assertEquals(player.getSumOfGoldCoins(),field.get(player));
     }
 
     @Test

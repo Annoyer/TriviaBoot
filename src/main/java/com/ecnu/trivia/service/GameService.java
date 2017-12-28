@@ -2,6 +2,7 @@ package com.ecnu.trivia.service;
 
 
 import com.ecnu.trivia.dto.Game;
+import com.ecnu.trivia.dto.GameStatus;
 import com.ecnu.trivia.dto.Player;
 import com.ecnu.trivia.model.User;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public interface GameService {
 
-    List<Game> getAllTables();
+    List<GameStatus> getAllTables();
 
     List<Player> getPlayersByTable(int tableId,User user);
 

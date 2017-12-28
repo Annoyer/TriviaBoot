@@ -2,10 +2,10 @@ package com.ecnu.trivia.service.impl;
 
 import com.ecnu.trivia.dao.QuestionDao;
 import com.ecnu.trivia.dto.Game;
+import com.ecnu.trivia.dto.GameStatus;
 import com.ecnu.trivia.dto.Player;
 import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.GameService;
-import com.ecnu.trivia.util.GameUtil;
 import com.ecnu.trivia.websocket.WebSocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,21 +23,13 @@ public class GameServiceImpl implements GameService {
     @Autowired
     QuestionDao questionDao;
 
-//    private Map<Integer,Game> tables = new HashMap<Integer, Game>();
 
-    public List<Game> getAllTables() {
-        List<Game> games = new ArrayList<Game>();
+    public List<GameStatus> getAllTables() {
+        List<GameStatus> games = new ArrayList<>();
         Map<Integer,Game> tables = WebSocketServer.getTables();
         // 限制最多只有5桌
         for (int i=0; i<5; i++) {
-            Game itable = tables.get(i);
-            if (itable != null){
-                games.add(itable);
-            } else {
-                Game newGame = new Game(i);
-                WebSocketServer.addTable(newGame);
-                games.add(newGame);
-            }
+            games.add(tables.get(i).getGameStatus());
         }
         return games;
     }

@@ -70,9 +70,9 @@ public class Player {
         isReady = ready;
     }
 
-    public static int getMaxNumberOfPlace() {
-        return MAX_NUMBER_OF_PLACE;
-    }
+//    public static int getMaxNumberOfPlace() {
+//        return MAX_NUMBER_OF_PLACE;
+//    }
 
     public void setUser(User user) {
         this.user = user;
@@ -84,9 +84,9 @@ public class Player {
      * @param user user
      */
     public Player(String playerName,User user,int initialPlace) {
-        this.playerName = playerName;
-        this.user = user;
-        this.place = initialPlace;
+        setPlayerName(playerName);
+        setUser(user);
+        setPlace(initialPlace);
     }
 
     public boolean getIsReady() {
@@ -129,20 +129,16 @@ public class Player {
         this.sumOfGoldCoins++;
     }
 
-    public int countGoldCoins() {
-        return this.sumOfGoldCoins;
-    }
-
     public boolean isInPenaltyBox() {
         return this.isInPenaltyBox;
     }
 
     public void getOutOfPenaltyBox() {
-        this.isInPenaltyBox = false;
+        setInPenaltyBox(false);
     }
 
     public void sentToPenaltyBox() {
-        this.isInPenaltyBox = true;
+        setInPenaltyBox(true);
     }
 
 }

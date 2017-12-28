@@ -13,10 +13,10 @@ public class Result {
     public Result() {
     }
 
-    public Result(boolean success, Object data) {
-        this.success = success;
-        this.data = data;
-    }
+//    public Result(boolean success, Object data) {
+//        this.success = success;
+//        this.data = data;
+//    }
 
 
     public Result(boolean success) {

@@ -25,47 +25,103 @@ public class QuestionMakerTest {
     }
 
     @Test
-    public void addPopQuestionList() throws Exception {
+    public void addPopQuestionListSuccess() throws Exception {
         QuestionMaker questionMaker = new QuestionMaker();
         Field field = QuestionMaker.class.getDeclaredField("popQuestions");
         field.setAccessible(true);
 
-        questionMaker.addPopQuestionList(questionList);
+        Assert.assertTrue(questionList.size() < QuestionMaker.MAX_NUMBER_OF_QUESTIONS);
+        Assert.assertTrue(questionMaker.addPopQuestionList(questionList));
 
         Assert.assertTrue(((List<Question>)field.get(questionMaker)).containsAll(questionList));
     }
 
     @Test
-    public void addScienceQuestionList() throws Exception {
+    public void addPopQuestionListFail() throws Exception {
+        QuestionMaker questionMaker = new QuestionMaker();
+        Field field = QuestionMaker.class.getDeclaredField("popQuestions");
+        field.setAccessible(true);
+
+        List<Question> okList = new ArrayList<>();
+        List<Question> failList = new ArrayList<>();
+        failList.add(new Question());
+
+        for (int i = 0; i < QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i += questionList.size()) {
+            okList.addAll(questionList);
+        }
+        for (int i = okList.size()+1; i <= QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i++) {
+            okList.add(questionList.get(0));
+        }
+
+        Assert.assertTrue(questionMaker.addPopQuestionList(okList));
+        Assert.assertTrue(!questionMaker.addPopQuestionList(failList));
+        Assert.assertTrue(!((List<Question>)field.get(questionMaker)).containsAll(failList));
+    }
+
+    @Test
+    public void addScienceQuestionListSuccess() throws Exception {
         QuestionMaker questionMaker = new QuestionMaker();
         Field field = QuestionMaker.class.getDeclaredField("scienceQuestions");
         field.setAccessible(true);
 
-        questionMaker.addScienceQuestionList(questionList);
+        List<Question> okList = new ArrayList<>();
+        List<Question> failList = new ArrayList<>();
+        failList.add(new Question());
 
-        Assert.assertTrue(((List<Question>)field.get(questionMaker)).containsAll(questionList));
+        for (int i = 0; i < QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i += questionList.size()) {
+            okList.addAll(questionList);
+        }
+        for (int i = okList.size()+1; i <= QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i++) {
+            okList.add(questionList.get(0));
+        }
+
+        Assert.assertTrue(questionMaker.addScienceQuestionList(okList));
+        Assert.assertTrue(!questionMaker.addScienceQuestionList(failList));
+        Assert.assertTrue(!((List<Question>)field.get(questionMaker)).containsAll(failList));
     }
 
     @Test
-    public void addSportsQuestionList() throws Exception {
+    public void addSportsQuestionListSuccess() throws Exception {
         QuestionMaker questionMaker = new QuestionMaker();
         Field field = QuestionMaker.class.getDeclaredField("sportsQuestions");
         field.setAccessible(true);
 
-        questionMaker.addSportsQuestionList(questionList);
+        List<Question> okList = new ArrayList<>();
+        List<Question> failList = new ArrayList<>();
+        failList.add(new Question());
 
-        Assert.assertTrue(((List<Question>)field.get(questionMaker)).containsAll(questionList));
+        for (int i = 0; i < QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i += questionList.size()) {
+            okList.addAll(questionList);
+        }
+        for (int i = okList.size()+1; i <= QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i++) {
+            okList.add(questionList.get(0));
+        }
+
+        Assert.assertTrue(questionMaker.addSportsQuestionList(okList));
+        Assert.assertTrue(!questionMaker.addSportsQuestionList(failList));
+        Assert.assertTrue(!((List<Question>)field.get(questionMaker)).containsAll(failList));
     }
 
     @Test
-    public void addRockQuestionList() throws Exception {
+    public void addRockQuestionListSuccess() throws Exception {
         QuestionMaker questionMaker = new QuestionMaker();
         Field field = QuestionMaker.class.getDeclaredField("rockQuestions");
         field.setAccessible(true);
 
-        questionMaker.addRockQuestionList(questionList);
+        List<Question> okList = new ArrayList<>();
+        List<Question> failList = new ArrayList<>();
+        failList.add(new Question());
 
-        Assert.assertTrue(((List<Question>)field.get(questionMaker)).containsAll(questionList));
+        for (int i = 0; i < QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i += questionList.size()) {
+            okList.addAll(questionList);
+        }
+        for (int i = okList.size()+1; i <= QuestionMaker.MAX_NUMBER_OF_QUESTIONS; i++) {
+            okList.add(questionList.get(0));
+        }
+
+        Assert.assertTrue(questionMaker.addRockQuestionList(okList));
+        Assert.assertTrue(!questionMaker.addRockQuestionList(failList));
+        Assert.assertTrue(!((List<Question>)field.get(questionMaker)).containsAll(failList));
     }
 
     @Test

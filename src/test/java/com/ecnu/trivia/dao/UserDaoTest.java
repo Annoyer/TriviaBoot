@@ -43,15 +43,13 @@ public class UserDaoTest extends BaseTest {
     @Test
     public void testGetUserById(){
         User user=userDao.getUserById(4);
-        User expectedUser=new User(4,"1","c",1,0,0);
-        assertEquals(expectedUser.toString(),user.toString());
+        assertTrue(user.getId().equals(4));
     }
 
     @Test
     public void testGetUserByNickName(){
        User user=userDao.getUserByNickName("c");
-       User expectedUser=new User(4,"1","c",1,0,0);
-       assertEquals(expectedUser.toString(),user.toString());
+       assertTrue(user.getUsername().equals("c"));
     }
 
     @Test
@@ -59,8 +57,8 @@ public class UserDaoTest extends BaseTest {
     @Rollback
     public void testUpdateWinCountAndLevel(){
         userDao.updateWinCountAndLevel(4,1,2);
-        User expectedUser=new User(4,"1","c",2,1,0);
-        assertEquals(expectedUser.toString(),userDao.getUserById(4).toString());
+        assertTrue(userDao.getUserById(4).getWinCount() == 1);
+        assertTrue(userDao.getUserById(4).getLevel() == 2);
     }
 
     @Test

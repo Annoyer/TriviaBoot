@@ -20,9 +20,9 @@ public class Question {
         this.level = level;
     }
 
-    public Question(String title) {
-        this.title = title;
-    }
+//    public Question(String title) {
+//        this.title = title;
+//    }
 
     public int getId() {
 

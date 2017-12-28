@@ -171,7 +171,7 @@ public class UserControllerTest extends BaseTest {
         User user = (User) getLoginSession().getAttribute("user");
 
         Result expectedResult = new Result(true);
-        when(userService.countWinLose(user,anyBoolean())).thenReturn(true);
+        when(userService.countWinLose(eq(user),anyBoolean())).thenReturn(true);
         mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

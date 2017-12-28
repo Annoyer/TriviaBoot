@@ -2,6 +2,7 @@ package com.ecnu.trivia.service.impl;
 
 import com.ecnu.trivia.dao.QuestionDao;
 import com.ecnu.trivia.dto.Game;
+import com.ecnu.trivia.dto.GameStatus;
 import com.ecnu.trivia.dto.Player;
 import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.GameService;
@@ -46,37 +47,7 @@ public class GameServiceImplTest{
         user = new User(5,"jjj","j",1,0,0);
     }
 
-    /**
-     * 五个空桌第一次被创建
-     * @throws Exception
-     */
-    @Test
-    public void getAllTablesWhenFirstUserEnter() throws Exception {
 
-        Map<Integer,Game> tables = new HashMap<>();
-        for (int i=0; i<5; i++){
-            tables.put(i,new Game(i));
-        }
-
-        PowerMockito.when(WebSocketServer.getTables()).thenReturn(new HashMap<Integer, Game>());
-        for (int i=0; i<5; i++){
-            PowerMockito.whenNew(Game.class).withArguments(i).thenReturn(tables.get(i));
-        }
-
-        List<Game> resultList = gameService.getAllTables();
-
-        PowerMockito.verifyNew(Game.class,times(5));
-        Assert.assertTrue(resultList.size()==5);
-        for (int i=0; i<5; i++){
-            Assert.assertEquals(resultList.get(i).getTableId(),tables.get(i).getTableId());
-        }
-
-    }
-
-    /**
-     * 已经有五个桌子
-     * @throws Exception
-     */
     @Test
     public void getAllTablesWhenNotFirstUserEnter() throws Exception {
 
@@ -87,11 +58,11 @@ public class GameServiceImplTest{
 
         PowerMockito.when(WebSocketServer.getTables()).thenReturn(tables);
 
-        List<Game> resultList = gameService.getAllTables();
+        List<GameStatus> resultList = gameService.getAllTables();
 
         Assert.assertTrue(resultList.size()==5);
         for (int i=0; i<5; i++){
-            Assert.assertEquals(resultList.get(i).getTableId(),tables.get(i).getTableId());
+            Assert.assertTrue(resultList.get(i).getTableId() == tables.get(i).getTableId());
         }
 
     }

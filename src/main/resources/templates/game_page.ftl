@@ -256,7 +256,7 @@
                         rollIfMyTurn();
                     } else if (gameStatus.status == -1) {
                         //重绘一下界面，来更新玩家在地图上的位置…………
-                        if (gameStatus.winner.playerName == null) {
+                        if (gameStatus.winner == null) {
                             $("#statusDiv").html("游戏结束,没有人获胜");
                         } else {
                             $("#statusDiv").html("游戏结束,胜者是：" + gameStatus.winner.playerName);
