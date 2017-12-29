@@ -5,7 +5,7 @@
     <style>
         body {
             background:#fff;
-            color: #ff0000;
+            color: lightpink;
             padding:0;
             margin:0;
             overflow:hidden;
@@ -15,9 +15,9 @@
         a {	color: #ff0080;	text-decoration: none; }
         a:hover { color: #0080ff; }
 
-        canvas { pointer-events:none; z-index:10; }
+        canvas { pointer-events:none; z-index:10;}
 
-        #d { text-align:center; margin:1em 0 -7.5em 0; z-index:1000; position:relative; display:block }
+        #d { text-align:center; margin:1em 0 -7.5em 0; z-index:1000; position:absolute; display:block }
         .button { background:orange; color:#fff; padding:0.2em 0.5em; cursor:pointer }
         .inactive { background:#999; color:#eee }
 
@@ -38,6 +38,12 @@
         p#result{text-align:center; font-size:16px}
         p#result span{font-weight:bold; color:#122b40; margin:6px}
         #dice_mask{width:90px; height:90px; background:#fff; opacity:0; position:absolute; top:0; left:0; z-index:999}
+
+        button{
+            background-color: hotpink;
+            border-color: hotpink;
+            color: white;
+        }
     </style>
 
 </head>
@@ -45,40 +51,16 @@
 
 
     <div class="row">
-    <button class="btn btn-primary" onclick="exit()" style="float:left;background-color: hotpink;border-color: hotpink">退出</button>
-    <p style="font-size: 30px">欢迎，${Session.user.username}</p>
 
-        <#--当前游戏状态：<span id="statusDiv" style="color: red"></span><br>-->
-
-        <#--接下来的操作：<span id="currnetStepDiv" style="color: red"></span><br>-->
-
-        <#--桌上的玩家们：<br>-->
-        <#--<div id="playerDiv">-->
-        <#--&lt;#&ndash;<#list players as p>&ndash;&gt;-->
-            <#--&lt;#&ndash;<div>&ndash;&gt;-->
-            <#--&lt;#&ndash;${p.playerName} - <#if p.isReady >已准备<#else >未准备</#if>&ndash;&gt;-->
-            <#--&lt;#&ndash;</div>&ndash;&gt;-->
-        <#--&lt;#&ndash;</#list>&ndash;&gt;-->
-        <#--</div>-->
-
-        <#--游戏进程：<br>-->
-        <#--当前玩家ID：<span id="currentPlayerDiv" style="color: #074c8a"></span><br>-->
-            <#--骰子点数：<span id="diceDiv" style="color: #074c8a"></span><br>-->
-
-        <#--<button id="btnReady" onclick="ready()" disabled="disabled">准备</button>-->
-        <#--<button id="btnStopDice" onclick="stopDice()" disabled="disabled">掷骰子</button>-->
-        <#--<div id="questionDiv" style="color: darkcyan"></div>-->
-        <#--<input type="number" id="answerInput" disabled="disabled">-->
-        <#--<button id="btnSubmitAnswer" onclick="submitAnswer()" disabled="disabled">提交问题</button>-->
-        <#--<button onclick="exit()">退出</button>-->
-    <#--<br>-->
     </div>
-    <div class="row">
-        <div class="col-sm-2">
+    <div style="position: absolute">
+        <button class="btn btn-primary" onclick="exit()" style="float:left;background-color: hotpink;border-color: hotpink;margin: 30px;">退出</button>
+
+        <div style="position: fixed; left: 90%;top:10%">
         <div id="dice" class=" dice dice_1" style="display:none;"></div>
             <div id="diceTextDiv"></div>
         </div>
-        <div class="col-sm-10" id="player-div">
+        <div id="player-div" class="row" style="margin-top: 100px;width: 400px">
         </div>
     </div>
     <div id="d">
@@ -128,20 +110,21 @@
                         var players = data.data;
                         for (var i = 0; i < players.length; i++) {
 //                            str += "<div>" + players[i].playerName + " - ";
-                            playerStr+=" <div class='col-sm-3'><img src='/img/player"+i+".png' style='width:100px'><div>"+players[i].playerName+"</div>";
+                            playerStr+=" <div class='row' style='margin: 20px'><div class='col-sm-4'><img src='/img/player"+i+".png' style='width:100px'></div><div class='col-sm-8' id='player-div"+i+"'><div class='row' style='font-size: 30px'>"+players[i].playerName+"</div><div class='row' id='readyDiv"+i+"'>";
                             if (players[i].isReady) {
 //                                str += "已准备";
-                                playerStr+="<div id='player-div"+i+"'><div class='readyDiv'><p>已准备</p></div></div>";
+                                playerStr+="<p>已准备</p>";
                             } else {
 //                                str += "未准备";
-                                playerStr+="<div id='player-div"+i+"'><div class='readyDiv'><p>未准备</p></div></div>";
                                 if(players[i].user.id==${Session.user.id}){
                                     playerStr+="<button class='btn btn-primary' onclick='ready()'>准备</button>"
                                 }
+                                else{
+                                    playerStr+="<p>未准备</p>";
+                                }
                             }
 //                            str += "</div>";
-                            playerStr+="</div>";
-
+                            playerStr+="</div></div></div>";
                         }
 //                        $("#playerDiv").html(str);
                         $("#player-div").html(playerStr);
@@ -160,8 +143,8 @@
             var msg = evnt.data;
 
             if (msg == "start") {
-                alert("游戏开始");
-                $("#statusDiv").html("游戏开始");
+               //alert("游戏开始");
+                //$("#statusDiv").html("游戏开始");
 
             } else {
                 //收到的是gameStatus的json字符串
@@ -177,19 +160,22 @@
 //                    var str = "";
                     var playerStr="";
                     for (var i = 0; i < players.length; i++) {
-//                        str += "<div>" + players[i].playerName + "-" + players[i].isReady + "</div>";
-                        playerStr+=" <div class='col-sm-3'><img src='/img/player"+i+".png' style='width:100px'><div>"+players[i].playerName+"</div>";
+//                            str += "<div>" + players[i].playerName + " - ";
+                        playerStr+=" <div class='row'  style='margin: 20px'><div class='col-sm-4'><img src='/img/player"+i+".png' style='width:100px'></div><div class='col-sm-8' id='player-div"+i+"'><div class='row'  style='font-size: 30px'>"+players[i].playerName+"</div><div class='row' id='readyDiv"+i+"'>";
                         if (players[i].isReady) {
-//                            str += "已准备";
-                            playerStr+="<div id='player-div"+i+"'><div class='readyDiv'><p>已准备</p></div></div>";
+//                                str += "已准备";
+                            playerStr+="<p>已准备</p>";
                         } else {
-//                            str += "未准备";
-                            playerStr+="<div id='player-div"+i+"'><div class='readyDiv'><p>未准备</p></div></div>";
+//                                str += "未准备";
                             if(players[i].user.id==${Session.user.id}){
                                 playerStr+="<button class='btn btn-primary' onclick='ready()'>准备</button>"
                             }
+                            else{
+                                playerStr+="<p>未准备</p>";
+                            }
                         }
-                        playerStr+="</div>";
+//                            str += "</div>";
+                        playerStr+="</div></div></div>";
                     }
 //                    $("#playerDiv").html(str);
                     $("#player-div").html(playerStr);
@@ -201,13 +187,21 @@
 //                    var str = "";
 
                     for (var i = 0; i < players.length; i++) {
-                        var playerStr="<div>" + players[i].playerName + ": 位置-" + players[i].place +
-                                "金币数-" + players[i].sumOfGoldCoins +
-                                "是否在禁闭室内-" + players[i].inPenaltyBox + "</div>";
+                        var playerStr="<div class='col-sm-4'><img src='/img/coin.png' style='width:20px;'>" + players[i].sumOfGoldCoins+"</div>";
+
+                        if(i==gameStatus.currentPlayerIndex){
+                            playerStr+="<div class='col-sm-4'><img src='/img/diceIcon.png' width='30px'></div>";
+                        }
+                        if(players[i].inPenaltyBox){
+                            playerStr+="<div class='col-sm-4'><img src='/img/inBox.png' width='30px'></div>";
+                        }
+                        else {
+                            playerStr += "</div>";
+                        }
 //                        str += "<div>" + players[i].playerName + ": 位置-" + players[i].place +
 //                                "金币数-" + players[i].sumOfGoldCoins +
 //                                "是否在禁闭室内-" + players[i].inPenaltyBox + "</div>";
-                        $("#player-div"+i).html(playerStr);
+                        $("#readyDiv"+i).html(playerStr);
                     }
 //                    $("#playerDiv").html(str);
 
@@ -257,9 +251,10 @@
                     } else if (gameStatus.status == -1) {
                         //重绘一下界面，来更新玩家在地图上的位置…………
                         if (gameStatus.winner == null) {
-                            $("#statusDiv").html("游戏结束,没有人获胜");
+                            //alert("游戏结束,没有人获胜");
+                            endAlert("游戏结束,没有人获胜");
                         } else {
-                            $("#statusDiv").html("游戏结束,胜者是：" + gameStatus.winner.playerName);
+                            endAlert("游戏结束,胜者是：" + gameStatus.winner.playerName);
                             var isWinner = (gameStatus.winner.user.id == ${Session.user.id});
                             $.ajax({
                                 method: 'POST',
@@ -293,7 +288,7 @@
         websocket.onerror = function (evnt) {
         };
         websocket.onclose = function (evnt) {
-            alert("与服务器断开了链接!");
+           // alert("与服务器断开了链接!");
             //window.location.href = '/game/tables';
         }
 
@@ -329,22 +324,22 @@
         });
     }
 
-    function stopDice() {
-        $("#statusDiv").html("您掷了骰子");
-        $.ajax({
-            method: 'POST',
-            url: '/game/stopDice',
-            data: {
-                tableId: ${tableId}
-            },
-            success: function () {
+    <#--function stopDice() {-->
+        <#--$("#statusDiv").html("您掷了骰子");-->
+        <#--$.ajax({-->
+            <#--method: 'POST',-->
+            <#--url: '/game/stopDice',-->
+            <#--data: {-->
+                <#--tableId: ${tableId}-->
+            <#--},-->
+            <#--success: function () {-->
 
-            },
-            error: function () {
-                alert("请求出错！");
-            }
-        });
-    }
+            <#--},-->
+            <#--error: function () {-->
+                <#--alert("请求出错！");-->
+            <#--}-->
+        <#--});-->
+    <#--}-->
 
     function stopDice2(num){
         $("#statusDiv").html("您掷了骰子");
@@ -356,7 +351,10 @@
                 num:num
             },
             success: function () {
+                if(gameStatus.currentQuestion==null){
+                    stillInBoxAlert();
 
+                }
             },
             error: function () {
                 alert("请求出错！");
@@ -377,7 +375,12 @@
                 isCorrect: isCorrect
             },
             success: function () {
-
+                if(gameStatus.status==3){
+                    rightAlert();
+                }
+                else if(gameStatus.status==4){
+                    wrongAlert();
+                }
             },
             error: function () {
                 alert("请求出错！");
@@ -389,7 +392,7 @@
         if (gameStatus.currentPlayerId ==${Session.user.id}) {
             document.getElementById("dice").setAttribute("style","display:block");
             $("#diceTextDiv").html("你可以掷骰子了");
-            $("#currnetStepDiv").html("你可以掷骰子了");
+            $("#currentStepDiv").html("你可以掷骰子了");
             $("#btnStopDice").removeAttr("disabled");
 
         } else {
@@ -621,7 +624,7 @@
             else if(p==1){
                 meterial=new THREE.MeshBasicMaterial({color: 0xf7b970});}
             else if(p==2){
-                meterial=new THREE.MeshBasicMaterial({color: 0xF5A854});}
+                meterial=new THREE.MeshBasicMaterial({color: 0xC3E6F8});}
             else if(p==3){
                 meterial=new THREE.MeshBasicMaterial({color: 0xF08E83});}
             var playerModel=new THREE.Mesh(new THREE.SphereBufferGeometry(10,50,50),meterial);
@@ -674,6 +677,9 @@
             if(gameStatus.currentPlayerId == ${Session.user.id}){
                 questionTest();
             }
+            else{
+                otherPlayerQuestionAlert(gameStatus.currentPlayerIndex);
+            }
 
         }
 
@@ -698,6 +704,101 @@
      	currentPlayer=player;
      }
 
+
+     function endAlert(alertStr) {
+         $.jAlert({
+             'title': '游戏结束',
+             'content': '<p>' + alertStr + '</p>',
+             'theme': 'blue',
+             'btnBackground': false,
+             'btns': {
+                 'text':'确定', 'theme': 'blue', 'onClick': function(e, btn){
+                     e.preventDefault();
+                     location.href="/game/tables";
+
+                 }
+             }
+         });
+     }
+
+    function rightAlert() {
+        $.jAlert({
+            'title': 'yeah!yeah!yeah!',
+            'content': '<p>回答正确!加一个金币23333</p>',
+            'theme': 'green',
+            'showAnimation': 'flipInX',
+            'hideAnimation': 'flipOutX',
+            'closeOnClick': true,
+            'onOpen': function(alert)
+            {
+                setTimeout(function(){
+                    alert.closeAlert();
+                }, 1000);
+            }
+        });
+    }
+
+    function wrongAlert() {
+        $.jAlert({
+            'title': 'emmmmm...',
+            'content': '<p>回答错误！你被禁了23333</p>',
+            'theme': 'red',
+            'showAnimation': 'flipInX',
+            'hideAnimation': 'flipOutX',
+            'closeOnClick': true,
+            'onOpen': function(alert)
+            {
+                setTimeout(function(){
+                    alert.closeAlert();
+                }, 1000);
+            }
+
+        });
+    }
+
+    function stillInBoxAlert() {
+        setTimeout(function(){
+            document.getElementById("dice").setAttribute("style","display:none");
+        }, 1500);
+        $.jAlert({
+            'title': 'emmmmm...',
+            'content': '<p>点数为偶数！小可怜！你还在禁闭室23333</p>',
+            'theme': 'red',
+            'showAnimation': 'flipInX',
+            'hideAnimation': 'flipOutX',
+            'closeOnClick': true,
+            'onOpen': function(alert)
+            {
+                setTimeout(function(){
+                    alert.closeAlert();
+                }, 1000);
+            }
+
+        });
+    }
+    function otherPlayerQuestionAlert(i){
+         if(title=gameStatus.currentQuestion!=null) {
+             var title = gameStatus.currentQuestion.title;
+             var answers = gameStatus.currentQuestion.answers;
+             $.jAlert({
+                 'title': gameStatus.players[i].playerName + '正在回答：',
+                 'content': '<p>' + title + '</p><p>A.' + answers.split("#")[0] +
+                 '</p><p>B.' + answers.split("#")[1] +
+                 '</p><p>C.' + answers.split("#")[2] +
+                 '</p><p>D.' + answers.split("#")[3] + '</p>',
+                 'theme': 'yellow',
+                 'showAnimation': 'flipInX',
+                 'hideAnimation': 'flipOutX',
+                 'closeOnClick': true,
+                 'onOpen': function (alert) {
+                     setTimeout(function () {
+                         alert.closeAlert();
+                     }, 2000);
+                 }
+
+             });
+         }
+    }
 
     function questionTest(){
          if(title=gameStatus.currentQuestion!=null) {

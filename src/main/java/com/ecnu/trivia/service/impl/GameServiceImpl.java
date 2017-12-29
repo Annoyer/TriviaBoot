@@ -27,8 +27,8 @@ public class GameServiceImpl implements GameService {
     public List<GameStatus> getAllTables() {
         List<GameStatus> games = new ArrayList<>();
         Map<Integer,Game> tables = WebSocketServer.getTables();
-        // 限制最多只有5桌
-        for (int i=0; i<5; i++) {
+        // 限制最多只有6桌
+        for (int i=0; i<6; i++) {
             games.add(tables.get(i).getGameStatus());
         }
         return games;
@@ -90,6 +90,7 @@ public class GameServiceImpl implements GameService {
         Game table = WebSocketServer.getTable(tableId);
         table.setReady(userId);
         if (table.isEnoughPlayer() && table.isAllPlayerReady()){
+       // if (table.isAllPlayerReady()){
             table.prepareQuestions(questionDao.selectByDomain("pop"),
                     questionDao.selectByDomain("science"),
                     questionDao.selectByDomain("sports"),

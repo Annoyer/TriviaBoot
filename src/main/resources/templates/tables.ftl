@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>选桌</title>
     <style>
-        img{
-            width: 150px;
-            cursor: pointer;
-        }
         .info{
-            font-size: 50px;
+            font-size: 30px;
             margin: 50px;
             color: grey;
         }
-        .tableDiv{
-            margin: 50px;
+        .row {
             text-align: center;
+        }
+
+        .chair img{
+            height: 80px;
+
+        }
+        .tableImg img{
+            height: 80px;
         }
     </style>
 </head>
@@ -47,7 +50,17 @@
 
 </c:forEach>-->
 
-    <div id="dataDiv"></div>
+    <#--<div id="tableDiv" style="width: 200px">-->
+        <#--<div class="row chair"><img id="chair2" src="/img/chair.png"></div>-->
+        <#--<div class="row">-->
+            <#--<div class="col-sm-3 chair" style="text-align: center"><img id="chair1" src="/img/chair.png"></div>-->
+            <#--<div class="col-sm-6 tableImg" style="text-align: center" ><img src="/img/table.png"></div>-->
+            <#--<div class="col-sm-3 chair" style="text-align: center"><img id="chair3" src="/img/chair.png"></div>-->
+        <#--</div>-->
+        <#--<div class="row chair"><img id="chair4" src="/img/chair.png"></div>-->
+
+
+    <#--</div>-->
 
 </body>
 </html>
@@ -71,7 +84,7 @@
             //websocket = new SocketJs("http://122.152.197.158:10000/sockjs/websocket?tableId=-1");
         }
         websocket.onopen = function (evnt) {
-            alert("链接服务器成功!");
+           // alert("链接服务器成功!");
             $.ajax({
                 method: 'POST',
                 url: '/game/getAllTables',
@@ -97,28 +110,47 @@
         websocket.onerror = function (evnt) {
         };
         websocket.onclose = function (evnt) {
-            alert("与服务器断开了链接!");
+           // alert("与服务器断开了链接!");
             //window.location.reload();
         }
 
     });
 
     function showTables(tables) {
-        $("#dataDiv").html(tables);
+      //  $("#dataDiv").html(tables.length);
         var str = "";
         $.each (tables, function(i,t){
-            if (t.status == 0 && t.players.length < 4){
-                str += '<button onclick="chooseTable(' + t.tableId + ')">加入' + t.tableId + '号桌</button>';
-            } else {
-                str += '<button onclick="chooseTable(' + t.tableId + ')" disabled>加入' + t.tableId + '号桌</button>';
+               // str += '<button onclick="chooseTable(' + t.tableId + ')">加入' + t.tableId + '号桌</button>';
+            if(i==0||i==3){
+                str+='<div class="row" style="margin-bottom: 30px">';
+            }
+                str+='<div id="tableDiv" class="col-sm-4" style="width: 250px;margin-left: 50px">'+
+                    '<div class="row chair" style="height: 80px"><img id="chair0" src="/img/chair'+((t.players.length>0)?'0':'')+'.png"></div>'+
+                        '<div class="row" style="height: 80px">'+
+                        '<div class="col-sm-3 chair" style="text-align: center"><img id="chair1" src="/img/chair'+((t.players.length>1)?'1':'')+'.png"></div>';
+            if(t.status == 0 && t.players.length < 4){
+                str+= '<div class="col-sm-6 tableImg" style="text-align: center;cursor: pointer;" onclick="chooseTable(' + t.tableId + ')"><img src="/img/table.png"></div>';
+            }
+            else if(t.players.length==4){
+                str+= '<div class="col-sm-6 tableImg" style="text-align: center" disabled><img src="/img/table-full.png"></div>';
+            }
+            else{
+                str+= '<div class="col-sm-6 tableImg" style="text-align: center" disabled><img src="/img/table-ing.png"></div>';
+            }
+                str+='<div class="col-sm-3 chair" style="text-align: center"><img id="chair3" src="/img/chair'+((t.players.length>3)?'3':'')+'.png"></div>'+
+                        '</div>'+
+                        '<div class="row chair" style="height: 80px"><img id="chair2" src="/img/chair'+((t.players.length>2)?'2':'')+'.png"></div></div>';
+            if(i==2||i==5){
+                str+='</div>';
             }
         });
 
         $("#tablesDiv").html(str);
 
     }
+
     function chooseTable(id) {
-        alert(id);
+       // alert(id);
         var initialPlace = 0;
         $.ajax({
             method: 'POST',
