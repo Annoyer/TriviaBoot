@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -19,9 +20,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.http.HttpSession;
 
@@ -60,8 +63,14 @@ public class UserControllerTest extends BaseTest {
     public void setUp() throws Exception {
         //MockMvcBuilders使用构建MockMvc对象   （项目拦截器有效）
         //mvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        mvc = MockMvcBuilders.standaloneSetup(userController).build();
+//        mvc = MockMvcBuilders.standaloneSetup(userController).build();
         session=new MockHttpSession();
+
+        MockitoAnnotations.initMocks(this);
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver(); //配置视图解析器
+        resolver.setPrefix("/");
+        resolver.setSuffix(".ftl");
+        mvc = MockMvcBuilders.standaloneSetup(userController).setViewResolvers(resolver).build();
     }
 
     //测试完后，数据库事务回滚
@@ -155,12 +164,45 @@ public class UserControllerTest extends BaseTest {
                 .andReturn();
     }
 
+    @Test
+    public void testToIndex() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/user/index");
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("index"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+
+
+    @Test
+    public void testToSignupPage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/user/signupPage");
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("signup"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
+    public void testToLoginPage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/user/loginPage");
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("login"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
 
 
     @Test
     @Transactional
     @Rollback
-    public void record() throws Exception {
+    public void recordSuccess() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
         MockHttpServletRequestBuilder request = post("/user/recordGameResult")
@@ -172,6 +214,30 @@ public class UserControllerTest extends BaseTest {
 
         Result expectedResult = new Result(true);
         when(userService.countWinLose(eq(user),anyBoolean())).thenReturn(true);
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedResult)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void recordFail() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MockHttpServletRequestBuilder request = post("/user/recordGameResult")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .param("isWinner","true")
+                .session((MockHttpSession)getLoginSession());
+
+        User user = (User) getLoginSession().getAttribute("user");
+
+        Result expectedResult = new Result(false);
+        expectedResult.setError("记录胜率失败");
+        when(userService.countWinLose(eq(user),anyBoolean())).thenReturn(false);
         mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
