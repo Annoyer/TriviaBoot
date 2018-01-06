@@ -28,7 +28,7 @@ public class GameServiceImpl implements GameService {
         List<GameStatus> games = new ArrayList<>();
         Map<Integer,Game> tables = WebSocketServer.getTables();
         // 限制最多只有6桌
-        for (int i=0; i<6; i++) {
+        for (int i=0; i<Game.MAX_TABLE_NUM; i++) {
             games.add(tables.get(i).getGameStatus());
         }
         return games;
@@ -72,7 +72,7 @@ public class GameServiceImpl implements GameService {
 //        }
 
         //若游戏不在进行中，且未满员，加桌成功
-        if (!table.isEnoughPlayer() && !table.isGameStart()){
+        if (!table.isFullPlayer() && !table.isGameStart()){
             table.add(user.getUsername(),user,initialPlace);//table会生成player
             return true;
         }
@@ -83,6 +83,7 @@ public class GameServiceImpl implements GameService {
 
     /**
      * 玩家准备，同时检查，如果该桌所有人都ready且满员，则游戏开始
+     * 2018.01.05 游戏开始条件更改为 桌上有两人及以上且所有人ready
      * @param tableId
      * @param userId
      */
@@ -90,7 +91,7 @@ public class GameServiceImpl implements GameService {
         Game table = WebSocketServer.getTable(tableId);
         table.setReady(userId);
         if (table.isEnoughPlayer() && table.isAllPlayerReady()){
-       // if (table.isAllPlayerReady()){
+        //if (table.getPlayers().size() > 1 && table.isAllPlayerReady()){
             table.prepareQuestions(questionDao.selectByDomain("pop"),
                     questionDao.selectByDomain("science"),
                     questionDao.selectByDomain("sports"),

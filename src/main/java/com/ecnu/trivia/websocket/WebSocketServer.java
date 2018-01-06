@@ -22,7 +22,7 @@ public class WebSocketServer implements WebSocketHandler {
 
     private static Map<Integer, Game> tables = new HashMap<Integer, Game>();
     static {
-        for (int i=0 ;i<6; i++){
+        for (int i=0 ;i<Game.MAX_TABLE_NUM; i++){
             tables.put(i,new Game(i));
         }
     }
@@ -164,9 +164,9 @@ public class WebSocketServer implements WebSocketHandler {
         return true;
     }
 
-    public static void addTable(Game game) {
-        tables.put(game.getTableId(), game);
-    }
+//    public static void addTable(Game game) {
+//        tables.put(game.getTableId(), game);
+//    }
 
     public static void removeTable(int tableId) {
         tables.put(tableId,new Game(tableId));

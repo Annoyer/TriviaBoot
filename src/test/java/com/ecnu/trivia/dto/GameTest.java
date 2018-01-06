@@ -276,6 +276,20 @@ public class GameTest{
     }
 
     @Test
+    public void isFullPlayer() throws Exception {
+
+        Game game = new Game(0);
+
+        Assert.assertTrue(users.size() >= Game.NUMBER_OF_MAX_PLAYER);
+
+        for (int i=0; i<Game.NUMBER_OF_MAX_PLAYER; i++) {
+            Assert.assertTrue(!game.isFullPlayer());
+            game.add(users.get(i).getUsername(),users.get(i),0);
+        }
+        Assert.assertTrue(game.isFullPlayer());
+    }
+
+    @Test
     public void isEnoughPlayer() throws Exception {
 
         Game game = new Game(0);
@@ -294,25 +308,15 @@ public class GameTest{
 
         Game game = new Game(0);
 
-        Assert.assertTrue(users.size() >= Game.NUMBER_OF_NEEDED_PLAYER && Game.NUMBER_OF_NEEDED_PLAYER > 2);
+        Assert.assertTrue(users.size() >= Game.NUMBER_OF_NEEDED_PLAYER);
         Assert.assertTrue(!game.isAllPlayerReady());
 
-        for (int i=0; i<2; i++) {
+        for (int i=0; i<Game.NUMBER_OF_NEEDED_PLAYER; i++) {
             game.add(users.get(i).getUsername(),users.get(i),0);
             Assert.assertTrue(!game.isAllPlayerReady());
             game.setReady(users.get(i).getId());
             Assert.assertTrue(game.isAllPlayerReady());
         }
-
-        for (int i=2; i<Game.NUMBER_OF_NEEDED_PLAYER; i++) {
-            game.add(users.get(i).getUsername(),users.get(i),0);
-            Assert.assertTrue(!game.isAllPlayerReady());
-        }
-        for (int i=2; i<Game.NUMBER_OF_NEEDED_PLAYER; i++) {
-            Assert.assertTrue(!game.isAllPlayerReady());
-            game.setReady(users.get(i).getId());
-        }
-        Assert.assertTrue(game.isAllPlayerReady());
 
     }
 

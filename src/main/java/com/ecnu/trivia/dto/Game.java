@@ -21,7 +21,9 @@ public class Game {
     public static final int NUMBER_OF_GOLD_COINS_TO_WON_AND_GAME_OVER = 6;
     public static final int MAX_NUMBER_OF_BYTES_WRITING_TO_ONE_FILE = 10000000;
     public static final int NUMBER_OF_FILES_TO_USE = 1;
-    public static final int NUMBER_OF_NEEDED_PLAYER = 4;//by j：游戏开始所必须的玩家数
+    public static final int NUMBER_OF_NEEDED_PLAYER = 2;//by j：游戏开始所必须的玩家数
+    public static final int NUMBER_OF_MAX_PLAYER = 4;//by j：游戏开始所必须的玩家数
+    public static final int MAX_TABLE_NUM = 28;
 
     private final QuestionMaker questionMaker;
 
@@ -351,6 +353,15 @@ public class Game {
      */
     public boolean isGameStart() {
         return status > 0;
+    }
+
+    /**
+     * by j：判断游戏是否满员
+     *
+     * @return
+     */
+    public boolean isFullPlayer() {
+        return players.size() == NUMBER_OF_MAX_PLAYER;
     }
 
     /**

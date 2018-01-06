@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 //配置数据库事务的回滚
 //@Transactional
 //@Rollback
-public class BaseTest {
+public abstract class BaseTest {
     @Before
     public void before(){
         MockitoAnnotations.initMocks(this);

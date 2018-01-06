@@ -52,7 +52,7 @@ public class GameServiceImplTest{
     public void getAllTablesWhenNotFirstUserEnter() throws Exception {
 
         Map<Integer,Game> tables = new HashMap<>();
-        for (int i=0; i<5; i++){
+        for (int i=0; i<Game.MAX_TABLE_NUM; i++){
             tables.put(i,new Game(i));
         }
 
@@ -60,8 +60,8 @@ public class GameServiceImplTest{
 
         List<GameStatus> resultList = gameService.getAllTables();
 
-        Assert.assertTrue(resultList.size()==5);
-        for (int i=0; i<5; i++){
+        Assert.assertTrue(resultList.size()==Game.MAX_TABLE_NUM);
+        for (int i=0; i<Game.MAX_TABLE_NUM; i++){
             Assert.assertTrue(resultList.get(i).getTableId() == tables.get(i).getTableId());
         }
 
@@ -110,7 +110,7 @@ public class GameServiceImplTest{
     public void userChooseTableSuccess() throws Exception {
 
         Game table0 = mock(Game.class);
-        when(table0.isEnoughPlayer()).thenReturn(false);
+        when(table0.isFullPlayer()).thenReturn(false);
         when(table0.isGameStart()).thenReturn(false);
         PowerMockito.when(WebSocketServer.getTable(0)).thenReturn(table0);
 
@@ -124,7 +124,7 @@ public class GameServiceImplTest{
     public void userChooseTableFailBecauseGameStart() throws Exception {
 
         Game table0 = mock(Game.class);
-        when(table0.isEnoughPlayer()).thenReturn(true);
+        when(table0.isFullPlayer()).thenReturn(true);
         when(table0.isGameStart()).thenReturn(true);
         PowerMockito.when(WebSocketServer.getTable(0)).thenReturn(table0);
 
@@ -138,7 +138,7 @@ public class GameServiceImplTest{
     public void userChooseTableFailBecausePlayerEnough() throws Exception {
 
         Game table0 = mock(Game.class);
-        when(table0.isEnoughPlayer()).thenReturn(true);
+        when(table0.isFullPlayer()).thenReturn(true);
         when(table0.isGameStart()).thenReturn(false);
         PowerMockito.when(WebSocketServer.getTable(0)).thenReturn(table0);
 

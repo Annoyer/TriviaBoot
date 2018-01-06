@@ -25,7 +25,7 @@
 </head>
 <body>
 <p class="info">${Session.user.username}，请选择游戏房间。</p>
-<div id="tablesDiv" class="tablesDiv">
+<div id="tablesDiv" class="tablesDiv container">
 <#--<#list tables as t>-->
 <#--<div class="tableDiv col-sm-4">-->
 <#--<#if t.status ==0>-->
@@ -121,10 +121,10 @@
         var str = "";
         $.each (tables, function(i,t){
                // str += '<button onclick="chooseTable(' + t.tableId + ')">加入' + t.tableId + '号桌</button>';
-            if(i==0||i==3){
+            if(i%4 == 0){
                 str+='<div class="row" style="margin-bottom: 30px">';
             }
-                str+='<div id="tableDiv" class="col-sm-4" style="width: 250px;margin-left: 50px">'+
+                str+='<div id="tableDiv" class="col-sm-3" style="padding: 20px; 50px;">'+
                     '<div class="row chair" style="height: 80px"><img id="chair0" src="/img/chair'+((t.players.length>0)?'0':'')+'.png"></div>'+
                         '<div class="row" style="height: 80px">'+
                         '<div class="col-sm-3 chair" style="text-align: center"><img id="chair1" src="/img/chair'+((t.players.length>1)?'1':'')+'.png"></div>';
@@ -140,7 +140,7 @@
                 str+='<div class="col-sm-3 chair" style="text-align: center"><img id="chair3" src="/img/chair'+((t.players.length>3)?'3':'')+'.png"></div>'+
                         '</div>'+
                         '<div class="row chair" style="height: 80px"><img id="chair2" src="/img/chair'+((t.players.length>2)?'2':'')+'.png"></div></div>';
-            if(i==2||i==5){
+            if(i%4 == 3){
                 str+='</div>';
             }
         });
