@@ -304,6 +304,8 @@
                 alert('未与服务器链接.');
             }
         }
+
+        $("#dice").bind("click",clickDice);
     });
 
     function ready() {
@@ -391,6 +393,7 @@
     function rollIfMyTurn() {
         if (gameStatus.currentPlayerId ==${Session.user.id}) {
             document.getElementById("dice").setAttribute("style","display:block");
+            $("#dice").bind("click",clickDice);
             $("#diceTextDiv").html("你可以掷骰子了");
             $("#currentStepDiv").html("你可以掷骰子了");
             $("#btnStopDice").removeAttr("disabled");
@@ -832,8 +835,10 @@
     }
 
 
-    $(".dice").click(function(){
+ //   $(".dice").click(function(){
+    function clickDice() {
         if(gameStatus.currentPlayerId == ${Session.user.id}) {
+            $("#dice").unbind("click");
             $("#diceTextDiv").html("");
             var dice = $(".dice");
             $(".wrap").append("<div id='dice_mask'></div>");//加遮罩
@@ -854,7 +859,7 @@
             });
             stopDice2(num);
         }
-    });
+    }
 
 </script>
 </body>
