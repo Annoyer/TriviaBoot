@@ -76,40 +76,43 @@ public class WebSocketServer implements WebSocketHandler {
         logger.info("socket on close()");
         Integer userId = (Integer) webSocketSession.getAttributes().get("userId");
         Integer tableId = (Integer) webSocketSession.getAttributes().get("tableId");
-        if (tableId < 0) {
-            userSessionsInTables.remove(userId);
-            logger.info("用户{}下线", userId);
-        } else {
-            Game table = tables.get(tableId);
+        Integer pastTableId = (Integer)webSocketSession.getAttributes().get("pastTableId");
+//        Game table;
+//        if (tableId >= 0){
+//            table = tables.get(tableId);
+//        } else {
+//            table = tables.get(pastTableId);
+//        }
 
-            //确保当前用户是在桌上的（正常的通过选桌页面进来的）
-            if (table != null) {
-                Player player = table.getPlayer(userId);
-                if (player != null){
+        if (userSessionsInTables.containsKey(userId)){
+            userSessionsInTables.remove(userId);
+            logger.info("用户{}离开选桌页面", userId);
+        } else {
+            for (Game table:tables.values()) {
+                if (table.hasPlayer(userId)){
+                    Player player = table.getPlayer(userId);
                     player.setConnected(false);
                     //有一个人掉线了，游戏就得结束
                     if (table.isGameStart()) {
                         table.endGame();
-                        logger.info("桌号{}游戏强制结束", tableId);
+                        logger.info("桌号{}游戏强制结束", table.getTableId());
                     } else {
                         table.remove(userId);
-                        logger.info("用户{}离开桌号{}", userId, tableId);
+                        logger.info("用户{}离开桌号{}", userId, table.getTableId());
                         if (table.getPlayers().size() == 0) {
                             //removeTable(table.getTableId());
                             table.endGame();
                         }
                     }
+                    //移除当前用户终端登录的websocket信息,如果该用户下线了，则删除该用户的记录
+                    if (userSessionsInGames.get(userId) != null) {
+                        userSessionsInGames.remove(userId);
+                        logger.info("用户{}离开游戏页面", userId);
+                    }
+                    break;
                 }
+                broadcastToUserInTablesPage();
             }
-
-            //移除当前用户终端登录的websocket信息,如果该用户下线了，则删除该用户的记录
-            if (userSessionsInGames.get(userId) != null) {
-                userSessionsInGames.remove(userId);
-            }
-            logger.info("用户{}离开桌子", userId);
-
-            broadcastToUserInTablesPage();
-
         }
 
 
@@ -151,7 +154,10 @@ public class WebSocketServer implements WebSocketHandler {
         }
         for (WebSocketSession WS : userSessionsInTables.values()) {
             try {
-                WS.sendMessage(new TextMessage(array.toString()));
+                if (WS.isOpen()){
+                    WS.sendMessage(new TextMessage(array.toString()));
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.debug("发送消息失败");

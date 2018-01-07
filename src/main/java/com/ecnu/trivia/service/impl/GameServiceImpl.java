@@ -46,12 +46,14 @@ public class GameServiceImpl implements GameService {
 
         Game game = WebSocketServer.getTable(tableId);
 
-        boolean isOnTable = game.hasPlayer(user.getId());
+        if (!game.isFullPlayer() && !game.isGameStart()){
+            game.add(user.getUsername(),user,0);
+            Player player = game.getPlayer(user.getId());
+            player.setConnected(true);
 
-        if (!isOnTable){
-            playerList.add(new Player(null,null,-1));
-        } else {
             playerList.addAll(game.getPlayers());
+        } else {
+            playerList.add(new Player(null,null,-1));
         }
 
         return playerList;
@@ -73,7 +75,7 @@ public class GameServiceImpl implements GameService {
 
         //若游戏不在进行中，且未满员，加桌成功
         if (!table.isFullPlayer() && !table.isGameStart()){
-            table.add(user.getUsername(),user,initialPlace);//table会生成player
+//            table.add(user.getUsername(),user,initialPlace);//table会生成player
             return true;
         }
         //游戏满员或正在进行，加桌失败

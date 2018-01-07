@@ -305,7 +305,6 @@
             }
         }
 
-        $("#dice").bind("click",clickDice);
     });
 
     function ready() {
@@ -837,8 +836,8 @@
 
  //   $(".dice").click(function(){
     function clickDice() {
+        $("#dice").unbind("click");
         if(gameStatus.currentPlayerId == ${Session.user.id}) {
-            $("#dice").unbind("click");
             $("#diceTextDiv").html("");
             var dice = $(".dice");
             $(".wrap").append("<div id='dice_mask'></div>");//加遮罩
