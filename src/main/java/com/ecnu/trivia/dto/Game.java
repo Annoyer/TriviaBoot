@@ -370,7 +370,7 @@ public class Game {
      * @return
      */
     public boolean isEnoughPlayer() {
-        return players.size() == NUMBER_OF_NEEDED_PLAYER;
+        return players.size() >= NUMBER_OF_NEEDED_PLAYER;
     }
 
     /**

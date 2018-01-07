@@ -65,13 +65,10 @@ public class WebSocketServer implements WebSocketHandler {
     //接受消息处理消息
     @Override
     public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) throws Exception {
-
     }
 
     @Override
     public void handleTransportError(WebSocketSession webSocketSession, Throwable throwable) throws Exception {
-        Integer userId = (Integer) webSocketSession.getAttributes().get("userId");
-        logger.debug("用户id为：{}的连接发送错误", userId);
     }
 
     @Override
