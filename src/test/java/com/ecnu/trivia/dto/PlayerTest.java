@@ -33,27 +33,27 @@ public class PlayerTest {
         Assert.assertTrue(player.getIsReady());
     }
 
-    @Test
-    public void getIsReady() throws Exception {
-        Player player = new Player(user.getUsername(),user,0);
-        Field field = player.getClass().getDeclaredField("isReady");
-        field.setAccessible(true);
+//    @Test
+//    public void getIsReady() throws Exception {
+//        Player player = new Player(user.getUsername(),user,0);
+//        Field field = player.getClass().getDeclaredField("isReady");
+//        field.setAccessible(true);
+//
+//        field.set(player,true);
+//        Assert.assertEquals(player.getIsReady(),field.get(player));
+//        field.set(player,false);
+//        Assert.assertEquals(player.getIsReady(),field.get(player));
+//    }
 
-        field.set(player,true);
-        Assert.assertEquals(player.getIsReady(),field.get(player));
-        field.set(player,false);
-        Assert.assertEquals(player.getIsReady(),field.get(player));
-    }
-
-    @Test
-    public void getUser() throws Exception {
-        Player player = new Player(user.getUsername(),user,0);
-        Field field = player.getClass().getDeclaredField("user");
-        field.setAccessible(true);
-
-        Assert.assertEquals(player.getUser(),user);
-        Assert.assertEquals(player.getUser(),field.get(player));
-    }
+//    @Test
+//    public void getUser() throws Exception {
+//        Player player = new Player(user.getUsername(),user,0);
+//        Field field = player.getClass().getDeclaredField("user");
+//        field.setAccessible(true);
+//
+//        Assert.assertEquals(player.getUser(),user);
+//        Assert.assertEquals(player.getUser(),field.get(player));
+//    }
 
     @Test
     public void moveForwardSteps() throws Exception {
@@ -69,17 +69,17 @@ public class PlayerTest {
 
     }
 
-    @Test
-    public void getPlace() throws Exception {
-        Player player = new Player(user.getUsername(),user,0);
-        Field field = player.getClass().getDeclaredField("place");
-        field.setAccessible(true);
-
-        field.set(player,1);
-        Assert.assertEquals(player.getPlace(),field.get(player));
-        field.set(player,5);
-        Assert.assertEquals(player.getPlace(),field.get(player));
-    }
+//    @Test
+//    public void getPlace() throws Exception {
+//        Player player = new Player(user.getUsername(),user,0);
+//        Field field = player.getClass().getDeclaredField("place");
+//        field.setAccessible(true);
+//
+//        field.set(player,1);
+//        Assert.assertEquals(player.getPlace(),field.get(player));
+//        field.set(player,5);
+//        Assert.assertEquals(player.getPlace(),field.get(player));
+//    }
 
     @Test
     public void getCurrentCategory() throws Exception {
@@ -128,18 +128,18 @@ public class PlayerTest {
         Assert.assertEquals(player.getSumOfGoldCoins(),field.get(player));
     }
 
-    @Test
-    public void isInPenaltyBox() throws Exception {
-        Player player = new Player(user.getUsername(),user,0);
-        Field field = player.getClass().getDeclaredField("isInPenaltyBox");
-        field.setAccessible(true);
-
-        Assert.assertEquals(player.isInPenaltyBox(),false);
-        field.set(player,true);
-        Assert.assertEquals(player.isInPenaltyBox(),field.get(player));
-        field.set(player,false);
-        Assert.assertEquals(player.isInPenaltyBox(),field.get(player));
-    }
+//    @Test
+//    public void isInPenaltyBox() throws Exception {
+//        Player player = new Player(user.getUsername(),user,0);
+//        Field field = player.getClass().getDeclaredField("isInPenaltyBox");
+//        field.setAccessible(true);
+//
+//        Assert.assertEquals(player.isInPenaltyBox(),false);
+//        field.set(player,true);
+//        Assert.assertEquals(player.isInPenaltyBox(),field.get(player));
+//        field.set(player,false);
+//        Assert.assertEquals(player.isInPenaltyBox(),field.get(player));
+//    }
 
     @Test
     public void getOutOfPenaltyBox() throws Exception {

@@ -69,16 +69,31 @@ public class GameServiceImplTest{
 
 
     @Test
-    public void callGetPlayersByTableWhenRefreshPage() throws Exception {
+    public void callGetPlayersByTableWhenGameStart() throws Exception {
         //刷新页面，或直接如数地址进入页面的话，用户不在桌上
         Game table0 = mock(Game.class);
-        when(table0.hasPlayer(user.getId())).thenReturn(false);
+        when(table0.isFullPlayer()).thenReturn(false);
+        when(table0.isGameStart()).thenReturn(true);
         PowerMockito.when(WebSocketServer.getTable(0)).thenReturn(table0);
 
         List<Player> resultList = gameService.getPlayersByTable(0,user);
 
-        verify(table0).hasPlayer(user.getId());
-        verify(table0,never()).getPlayers();
+        verify(table0,never()).add(anyString(),any(User.class),anyInt());
+        Assert.assertTrue(resultList.size() == 1);
+        Assert.assertTrue(resultList.get(0).getPlace() == -1);
+
+    }
+
+    @Test
+    public void callGetPlayersByTableWhenFullPlayer() throws Exception {
+        Game table0 = mock(Game.class);
+        when(table0.isFullPlayer()).thenReturn(true);
+        when(table0.isGameStart()).thenReturn(false);
+        PowerMockito.when(WebSocketServer.getTable(0)).thenReturn(table0);
+
+        List<Player> resultList = gameService.getPlayersByTable(0,user);
+
+        verify(table0,never()).add(anyString(),any(User.class),anyInt());
         Assert.assertTrue(resultList.size() == 1);
         Assert.assertTrue(resultList.get(0).getPlace() == -1);
 
@@ -86,24 +101,24 @@ public class GameServiceImplTest{
 
 
     @Test
-    public void callGetPlayersByTableWhenFirstEnterNormally() throws Exception {
-        //通过选桌页面进入的话，用户已经被加到桌上了
-        CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<>();
-        players.add(new Player(user.getUsername(),user,0));
+    public void callGetPlayersByTableWhenFirstEnterSuccess() throws Exception {
+        CopyOnWriteArrayList<Player> playerList = new CopyOnWriteArrayList<>();
+        Player player = new Player(user.getUsername(),user,0);
+        playerList.add(player);
 
         Game table0 = mock(Game.class);
         PowerMockito.when(WebSocketServer.getTable(0)).thenReturn(table0);
-        when(table0.hasPlayer(user.getId())).thenReturn(true);
-        when(table0.getPlayers()).thenReturn(players);
+        when(table0.isFullPlayer()).thenReturn(false);
+        when(table0.isGameStart()).thenReturn(false);
+        when(table0.getPlayer(user.getId())).thenReturn(player);
+        when(table0.getPlayers()).thenReturn(playerList);
 
         List<Player> resultList = gameService.getPlayersByTable(0,user);
 
-        verify(table0).hasPlayer(user.getId());
-        verify(table0).getPlayers();
-        Assert.assertTrue(resultList.size()<=4);
-        for (Player p:resultList) {
-            assertTrue(p.getPlace() >= 0);
-        }
+        verify(table0).add(user.getUsername(),user,0);
+
+        Assert.assertTrue(resultList.size()==1);
+        Assert.assertEquals(resultList.get(0),player);
     }
 
     @Test
@@ -116,7 +131,6 @@ public class GameServiceImplTest{
 
         boolean result = gameService.userChooseTable(0,user,0);
 
-        verify(table0).add(user.getUsername(),user,0);
         Assert.assertTrue(result);
     }
 

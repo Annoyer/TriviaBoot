@@ -75,8 +75,8 @@ public class WebSocketServer implements WebSocketHandler {
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
         logger.info("socket on close()");
         Integer userId = (Integer) webSocketSession.getAttributes().get("userId");
-        Integer tableId = (Integer) webSocketSession.getAttributes().get("tableId");
-        Integer pastTableId = (Integer)webSocketSession.getAttributes().get("pastTableId");
+//        Integer tableId = (Integer) webSocketSession.getAttributes().get("tableId");
+//        Integer pastTableId = (Integer)webSocketSession.getAttributes().get("pastTableId");
 //        Game table;
 //        if (tableId >= 0){
 //            table = tables.get(tableId);

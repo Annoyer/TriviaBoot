@@ -3,6 +3,7 @@ package com.ecnu.trivia.controller;
 import com.ecnu.trivia.BaseTest;
 import com.ecnu.trivia.dto.Player;
 import com.ecnu.trivia.dto.Result;
+import com.ecnu.trivia.fliter.LoginFilter;
 import com.ecnu.trivia.model.User;
 import com.ecnu.trivia.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +60,7 @@ public class GameControllerTest extends BaseTest {
         User user = new User(5,"jjj","j",1,0,0);
         session.setAttribute("user",user);
 
-        mvc = MockMvcBuilders.standaloneSetup(gameController).setViewResolvers(resolver).build();
+        mvc = MockMvcBuilders.standaloneSetup(gameController).addFilter(new LoginFilter()).setViewResolvers(resolver).build();
         //mvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
@@ -67,10 +68,20 @@ public class GameControllerTest extends BaseTest {
     public void toTables() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/game/tables")
                                                 .session(session);
-
         mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("tables"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
+    public void toTablesBeforeLogin() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/game/tables")
+                .session(new MockHttpSession());
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
@@ -88,6 +99,17 @@ public class GameControllerTest extends BaseTest {
     }
 
     @Test
+    public void getAllTableInfoBeforeLogin() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/game/getAllTables")
+                .session(new MockHttpSession());
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
     public void toGamePage() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/game/gamePage")
                                                 .session(session)
@@ -96,6 +118,18 @@ public class GameControllerTest extends BaseTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("game_page"))
                 .andExpect(MockMvcResultMatchers.model().attribute("tableId",0))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
+    public void toGamePageBeforeLogin() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/game/gamePage")
+                .session(new MockHttpSession())
+                .param("tableId","0");
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
@@ -117,6 +151,17 @@ public class GameControllerTest extends BaseTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().json(objectMapper.writeValueAsString(successResult)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
+    @Test
+    public void loadGameInfoBeforeLogin() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/game/loadGameInfo")
+                .param("tableId","0").session(new MockHttpSession());
+
+        mvc.perform(request)
+                .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
@@ -217,6 +262,7 @@ public class GameControllerTest extends BaseTest {
     public void answerQuestionCorrect() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/game/answerQuestion")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
+                .session(session)
                 .param("tableId","0")
                 .param("isCorrect","true");
 
@@ -229,6 +275,7 @@ public class GameControllerTest extends BaseTest {
     public void answerQuestionFalse() throws Exception {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/game/answerQuestion")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
+                .session(session)
                 .param("tableId","0")
                 .param("isCorrect","false");
 
