@@ -117,7 +117,7 @@ public class WebSocketServerTest{
         map.put("userId",user.getId());
         map.put("tableId",1);
         Mockito.when(webSocketSession.getAttributes()).thenReturn(map);
-        gameService.userChooseTable(1,user,0);
+        gameService.getPlayersByTable(1,user);
         CloseStatus closeStatus = new CloseStatus(1000);
 
         WebSocketServer server = new WebSocketServer();
@@ -139,9 +139,9 @@ public class WebSocketServerTest{
         map.put("userId",user.getId());
         map.put("tableId",2);
         Mockito.when(webSocketSession.getAttributes()).thenReturn(map);
-        gameService.userChooseTable(2,user,0);
+        gameService.getPlayersByTable(2,user);;
         User user2 = new User(4,"1","c",1,0,0);
-        gameService.userChooseTable(2,user2,0);
+        gameService.getPlayersByTable(2,user2);
         gameService.setPlayerReady(2,user.getId());
         gameService.setPlayerReady(2,user2.getId());
         CloseStatus closeStatus = new CloseStatus(1000);
@@ -185,6 +185,7 @@ public class WebSocketServerTest{
         map.put("userId",1);
         map.put("tableId",-1);
         Mockito.when(webSocketSession.getAttributes()).thenReturn(map);
+        Mockito.when(webSocketSession.isOpen()).thenReturn(true);
 
         WebSocketServer server = new WebSocketServer();
         server.afterConnectionEstablished(webSocketSession);
