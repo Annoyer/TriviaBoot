@@ -157,7 +157,7 @@ public class Game {
             }
         }
         WebSocketServer.broadcastToUserInTablesPage();
-        logger.info(userId + " was not found!");
+        //logger.info(userId + " was not found!");
     }
 
     /**
@@ -411,7 +411,6 @@ public class Game {
         logger.info("------------------------游戏开始--------------------------");
    //     if (boardcast("start") == 0) {
         boardcast("start");
-        WebSocketServer.broadcastToUserInTablesPage();
         setStatus(1);
         currentPlayer = 0;
         gameStatus.setCurrentPlayerId(players.get(currentPlayer).getUser().getId());
@@ -419,6 +418,7 @@ public class Game {
         gameStatus.setStatus(status);
         boardcast(gameStatus.toString());
         gameStatus.setFirstRound(false);
+        WebSocketServer.broadcastToUserInTablesPage();
 //        return true;
 //        } else {
 //            return false;
