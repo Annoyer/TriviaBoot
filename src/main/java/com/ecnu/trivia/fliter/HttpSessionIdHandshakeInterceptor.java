@@ -29,18 +29,18 @@ public class HttpSessionIdHandshakeInterceptor extends HttpSessionHandshakeInter
             User user = (User) session.getAttribute("user");
             Integer tableId = Integer.parseInt(servletRequest.getServletRequest().getParameter("tableId"));
 
-            if (session.getAttribute("pastTableId") != null){
-                attributes.put("pastTableId", session.getAttribute("pastTableId"));
-            } else {
-                attributes.put("pastTableId", -2);
-            }
+//            if (session.getAttribute("pastTableId") != null){
+//                attributes.put("pastTableId", session.getAttribute("pastTableId"));
+//            } else {
+//                attributes.put("pastTableId", -2);
+//            }
 
             attributes.put("tableId", tableId);
             //把session和accountId存放起来
             attributes.put("sessionId", session.getId());
             attributes.put("userId", user.getId());
 
-            session.setAttribute("pastTableId",tableId);
+//            session.setAttribute("pastTableId",tableId);
         }
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }
