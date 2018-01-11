@@ -53,14 +53,16 @@
     <div class="row">
 
     </div>
+    <div style="position: fixed; left: 85%;top:1%">
+     <button class="btn btn-primary" onclick="exit()" style="background-color: hotpink;border-color: hotpink;margin: 30px;">退出</button>
+    </div>
     <div style="position: absolute">
-        <button class="btn btn-primary" onclick="exit()" style="float:left;background-color: hotpink;border-color: hotpink;margin: 30px;">退出</button>
 
-        <div style="position: fixed; left: 90%;top:10%">
+        <div style="position: fixed; left: 80%;bottom:10%">
         <div id="dice" class=" dice dice_1" style="display:none;"></div>
             <div id="diceTextDiv"></div>
         </div>
-        <div id="player-div" class="row" style="margin-top: 100px;width: 400px">
+        <div id="player-div" class="row" style="margin-top: 5px;width: 250px">
         </div>
     </div>
     <div id="d">
@@ -110,14 +112,15 @@
                         var players = data.data;
                         for (var i = 0; i < players.length; i++) {
 //                            str += "<div>" + players[i].playerName + " - ";
-                            playerStr+=" <div class='row' style='margin: 20px'><div class='col-sm-4'><img src='/img/player"+i+".png' style='width:100px'></div><div class='col-sm-8' id='player-div"+i+"'><div class='row' style='font-size: 30px'>"+players[i].playerName+"</div><div class='row' id='readyDiv"+i+"'>";
+                            playerStr+=" <div class='row'  style='margin: 20px'><div class='col-xs-4'><img src='/img/player"+i+".png' style='width:50px'></div><div class='col-xs-8 container' id='player-div"+i+"'><div class='row'  style='font-size: 20px'><div class='col-xs-8'>"
+                                    +players[i].playerName+"</div><div class='col-xs-4'>lv"+players[i].user.level+"</div></div><div class='row' id='readyDiv"+i+"'>";
                             if (players[i].isReady) {
 //                                str += "已准备";
                                 playerStr+="<p>已准备</p>";
                             } else {
 //                                str += "未准备";
                                 if(players[i].user.id==${Session.user.id}){
-                                    playerStr+="<button class='btn btn-primary' onclick='ready()'>准备</button>"
+                                    playerStr+="<button class='btn' onclick='ready()'>准备</button>"
                                 }
                                 else{
                                     playerStr+="<p>未准备</p>";
@@ -161,14 +164,15 @@
                     var playerStr="";
                     for (var i = 0; i < players.length; i++) {
 //                            str += "<div>" + players[i].playerName + " - ";
-                        playerStr+=" <div class='row'  style='margin: 20px'><div class='col-sm-4'><img src='/img/player"+i+".png' style='width:100px'></div><div class='col-sm-8' id='player-div"+i+"'><div class='row'  style='font-size: 30px'>"+players[i].playerName+"</div><div class='row' id='readyDiv"+i+"'>";
+                        playerStr+=" <div class='row'  style='margin: 20px'><div class='col-xs-4'><img src='/img/player"+i+".png' style='width:50px'></div><div class='col-xs-8 container' id='player-div"+i+"'><div class='row'  style='font-size: 20px'><div class='col-xs-8'>"
+                                +players[i].playerName+"</div><div class='col-xs-4'>lv"+players[i].user.level+"</div></div><div class='row' id='readyDiv"+i+"'>";
                         if (players[i].isReady) {
 //                                str += "已准备";
                             playerStr+="<p>已准备</p>";
                         } else {
 //                                str += "未准备";
                             if(players[i].user.id==${Session.user.id}){
-                                playerStr+="<button class='btn btn-primary' onclick='ready()'>准备</button>"
+                                playerStr+="<button class='btn' onclick='ready()'>准备</button>"
                             }
                             else{
                                 playerStr+="<p>未准备</p>";
@@ -187,13 +191,13 @@
 //                    var str = "";
 
                     for (var i = 0; i < players.length; i++) {
-                        var playerStr="<div class='col-sm-4'><img src='/img/coin.png' style='width:20px;'>" + players[i].sumOfGoldCoins+"</div>";
+                        var playerStr="<div class='col-xs-2'><img src='/img/coin.png' style='width:20px;'></div><div class='col-xs-1' style='font-size:10px;'>" + players[i].sumOfGoldCoins+"</div>";
 
                         if(i==gameStatus.currentPlayerIndex){
-                            playerStr+="<div class='col-sm-4'><img src='/img/diceIcon.png' width='30px'></div>";
+                            playerStr+="<div class='col-xs-3'><img src='/img/diceIcon.png' width='20px'></div>";
                         }
                         if(players[i].inPenaltyBox){
-                            playerStr+="<div class='col-sm-4'><img src='/img/inBox.png' width='30px'></div>";
+                            playerStr+="<div class='col-xs-2'><img src='/img/inBox.png' width='20px'></div>";
                         }
                         else {
                             playerStr += "</div>";
@@ -743,7 +747,7 @@
     function wrongAlert() {
         $.jAlert({
             'title': 'emmmmm...',
-            'content': '<p>回答错误！你被禁了23333</p>',
+            'content': '<p>回答错误或超时！你被禁了23333</p>',
             'theme': 'red',
             'showAnimation': 'flipInX',
             'hideAnimation': 'flipOutX',
@@ -784,11 +788,12 @@
              var answers = gameStatus.currentQuestion.answers;
              $.jAlert({
                  'title': gameStatus.players[i].playerName + '正在回答：',
-                 'content': '<p>' + title + '</p><p>A.' + answers.split("#")[0] +
+                 'content': '<p>(问题领域：'+gameStatus.currentQuestion.domain+')</p><p>' + title +'</p><p>A.' + answers.split("#")[0] +
                  '</p><p>B.' + answers.split("#")[1] +
                  '</p><p>C.' + answers.split("#")[2] +
                  '</p><p>D.' + answers.split("#")[3] + '</p>',
                  'theme': 'yellow',
+                 'closeBtn':false, 'closeOnClick': false, 'closeOnEsc': false,
                  'showAnimation': 'flipInX',
                  'hideAnimation': 'flipOutX',
                  'closeOnClick': true,
@@ -809,18 +814,26 @@
              theme = 'yellow';
              $.jAlert({
                  'title': '问题',
-                 'content': '<p>' + title + '</p><p>A.' + answers.split("#")[0] +
+                 'content': '<div style="height: 30px"><p  style="display: inline">倒计时</p><p  style="display: inline" id="timecount">10</p><p  style="display: inline">秒</p></div><p>(问题领域：'+gameStatus.currentQuestion.domain+')</p><p>' + title +'</p><p>A.' + answers.split("#")[0] +
                  '</p><p>B.' + answers.split("#")[1] +
                  '</p><p>C.' + answers.split("#")[2] +
                  '</p><p>D.' + answers.split("#")[3] + '</p>',
                  'theme': theme,
+                 'closeBtn':false, 'closeOnClick': false, 'closeOnEsc': false,
                  'btnBackground': false,
                  'btns': [
                      {'text': 'A', 'theme': theme, 'id': 0, 'class': 'answerBtn'},
                      {'text': 'B', 'theme': theme, 'id': 1, 'class': 'answerBtn'},
                      {'text': 'C', 'theme': theme, 'id': 2, 'class': 'answerBtn'},
                      {'text': 'D', 'theme': theme, 'id': 3, 'class': 'answerBtn'}
-                 ]
+                 ],
+                 'onOpen':function (alert){
+                     timeCount();
+                     setTimeout(function () {
+                         alert.closeAlert();
+                     }, 10000);
+                 }
+
              });
 
              $(".answerBtn").click(function () {
@@ -831,6 +844,16 @@
          }else{
              rollIfMyTurn();
          }
+    }
+
+    function timeCount(){
+        document.getElementById('timecount').innerHTML=parseInt(document.getElementById('timecount').innerHTML)-1;
+        if( document.getElementById('timecount').innerHTML=='0'){
+            submitAnswer(-1);
+            document.getElementById("dice").setAttribute("style","display:none");
+            return;
+        }
+        setTimeout(timeCount, 1000);
     }
 
 

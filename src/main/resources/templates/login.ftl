@@ -8,7 +8,7 @@
     <script src="/js/jquery.min.js"></script>
     <style>
         #myForm{
-            margin: 100px;
+            margin: 60px;
         }
         .btn{
             background-color:indianred ;

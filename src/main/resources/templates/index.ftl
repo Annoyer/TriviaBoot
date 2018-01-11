@@ -8,7 +8,7 @@
     <script src="/js/jquery.min.js"></script>
     <style>
         .btn{
-            width: 150px;
+            width: 120px;
             font-size: 30px;
             background-color: pink;
             border-color: pink;
@@ -16,7 +16,7 @@
     </style>
 </head>
 <body style="text-align: center">
-<p style="font-size: 200px;color: pink;">trivia</p>
+<p style="font-size: 160px;color: pink;">trivia</p>
 <a class="btn btn-primary btn-lg" href="/user/loginPage">登录</a>
 <a class="btn btn-primary btn-lg" href="/user/signupPage">注册</a>
 </body>

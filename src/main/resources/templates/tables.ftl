@@ -15,11 +15,11 @@
         }
 
         .chair img{
-            height: 80px;
+            height: 50px;
 
         }
         .tableImg img{
-            height: 80px;
+            height: 50px;
         }
     </style>
 </head>
@@ -122,24 +122,25 @@
         $.each (tables, function(i,t){
                // str += '<button onclick="chooseTable(' + t.tableId + ')">加入' + t.tableId + '号桌</button>';
             if(i%4 == 0){
-                str+='<div class="row" style="margin-bottom: 30px">';
+                str+='<div class="row" style="margin-bottom: 50px">';
             }
-                str+='<div id="tableDiv" class="col-sm-3" style="padding: 20px; 50px;">'+
-                    '<div class="row chair" style="height: 80px"><img id="chair0" src="/img/chair'+((t.players.length>0)?'0':'')+'.png"></div>'+
-                        '<div class="row" style="height: 80px">'+
-                        '<div class="col-sm-3 chair" style="text-align: center"><img id="chair1" src="/img/chair'+((t.players.length>1)?'1':'')+'.png"></div>';
+                str+='<div id="tableDiv" class="col-xs-3 container"">'+
+                    '<div class="row chair" style="height: 50px"><img id="chair0" src="/img/chair'+((t.players.length>0)?'0':'')+'.png"></div>'+
+                        '<div class="row" style="height: 50px">'+
+                        '<div class="col-xs-3 chair" style="text-align: center"><img id="chair1" src="/img/chair'+((t.players.length>1)?'1':'')+'.png"></div>';
+
             if(t.status == 0 && t.players.length < 4){
-                str+= '<div class="col-sm-6 tableImg" style="text-align: center;cursor: pointer;" onclick="chooseTable(' + t.tableId + ')"><img src="/img/table.png"></div>';
+                str+= '<div class="col-xs-6 tableImg" style="text-align: center;cursor: pointer;" onclick="chooseTable(' + t.tableId + ')"><img src="/img/table.png"></div>';
             }
-            else if(t.players.length==4){
-                str+= '<div class="col-sm-6 tableImg" style="text-align: center" disabled><img src="/img/table-full.png"></div>';
+            else if(t.status == 0 && t.players.length==4){
+                str+= '<div class="col-xs-6 tableImg" style="text-align: center" disabled><img src="/img/table-full.png"></div>';
             }
             else{
-                str+= '<div class="col-sm-6 tableImg" style="text-align: center" disabled><img src="/img/table-ing.png"></div>';
+                str+= '<div class="col-xs-6 tableImg" style="text-align: center" disabled><img src="/img/table-ing.png"></div>';
             }
-                str+='<div class="col-sm-3 chair" style="text-align: center"><img id="chair3" src="/img/chair'+((t.players.length>3)?'3':'')+'.png"></div>'+
+                str+='<div class="col-xs-3 chair" style="text-align: center"><img id="chair3" src="/img/chair'+((t.players.length>3)?'3':'')+'.png"></div>'+
                         '</div>'+
-                        '<div class="row chair" style="height: 80px"><img id="chair2" src="/img/chair'+((t.players.length>2)?'2':'')+'.png"></div></div>';
+                        '<div class="row chair" style="height: 50px"><img id="chair2" src="/img/chair'+((t.players.length>2)?'2':'')+'.png"></div></div>';
             if(i%4 == 3){
                 str+='</div>';
             }
